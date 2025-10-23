@@ -82,7 +82,7 @@ console.log(e);
             <View style={{flex:1,alignItems:'center',justifyContent:'space-between' }}>
               <Text style={styles.title}>{item.name}</Text>
                 <Text style={styles.descriptionText}>{item.summary}</Text>
-                <View style={[styles.buynow,{marginTop:20}]}><Text style={{color:'white'}}>{item.price} ₹</Text></View>
+                <View style={[styles.buynow,{marginTop:20}]}><Text style={{color:'white', fontWeight: '600'}}>{item.price} ₹</Text></View>
             </View>
             
           </View>

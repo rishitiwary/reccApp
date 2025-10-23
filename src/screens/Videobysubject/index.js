@@ -3,7 +3,7 @@ import axios from 'axios';
 import {BASE_URL, IMG_URL} from '../../config/config';
 import {View, Text, FlatList, TouchableOpacity, Image} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-
+import COLORS from '../../config/colors';
 import styles from './style';
 import {DownloadFiles} from '../../components/DownloadFiles';
 
@@ -115,7 +115,7 @@ const Videobysubject = ({route}) => {
                 onPress={() => DownloadFiles(item.pdfs)}
                 disabled={flags == 1 ? true : false}>
                 <View style={styles.demo}>
-                  <Text style={{color: 'white'}}>Download PDF</Text>
+                  <Text style={{color: COLORS.primary, fontWeight: '600'}}>Download PDF</Text>
                 </View>
               </TouchableOpacity>
             </View>

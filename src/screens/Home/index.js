@@ -181,7 +181,7 @@ const HomeScreen = () => {
           </View>
 
           <FlatList
-            data={courses.data}
+            data={Array.isArray(courses.data) ? courses.data : []}
             horizontal
             keyExtractor={item => String(item.id)}
             removeClippedSubviews
@@ -522,7 +522,7 @@ const HomeScreen = () => {
             flexWrap: 'wrap',
             paddingHorizontal: 16,
           }}>
-            {typeof getData.data !== 'undefined' &&
+            {Array.isArray(getData.data) &&
               getData.data.map(item => {
                 return (
                   <TouchableOpacity

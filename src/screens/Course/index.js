@@ -15,6 +15,7 @@ import styles from '../MyPurchase/style';
 import {Payment, verifyPayment} from '../../components/Payment';
 import {Loader} from '../../components/Loader';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import COLORS from '../../config/colors';
 
 const debounce = (func, delay) => {
   let timeoutId;
@@ -171,7 +172,7 @@ const Course = ({route}) => {
                     {item.purchased ? (
                       <TouchableOpacity onPress={() => startLesson(item)}>
                         <View style={styles.buynow}>
-                          <Text style={{color: 'white'}}>Start Lesson</Text>
+                          <Text style={{color: 'white', fontWeight: '600'}}>Start Lesson</Text>
                         </View>
                       </TouchableOpacity>
                     ) : (
@@ -182,14 +183,14 @@ const Course = ({route}) => {
                           ])
                         }>
                         <View style={styles.buynow}>
-                          <Text style={{color: 'white'}}>Buy Now</Text>
+                          <Text style={{color: 'white', fontWeight: '600'}}>Buy Now</Text>
                         </View>
                       </TouchableOpacity>
                     )}
 
                     <TouchableOpacity onPress={() => handleClick(item)}>
                       <View style={styles.demo}>
-                        <Text style={{color: 'white'}}>Details</Text>
+                        <Text style={{color: COLORS.primary, fontWeight: '600'}}>Details</Text>
                       </View>
                     </TouchableOpacity>
                   </View>
