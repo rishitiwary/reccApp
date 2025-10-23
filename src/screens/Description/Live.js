@@ -65,9 +65,9 @@ const Live = ({route}) => {
   }, [canGoBack]);
 
   useEffect(() => {
-    BackHandler.addEventListener('hardwareBackPress', handleBack);
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBack);
     return () => {
-      BackHandler.removeEventListener('hardwareBackPress', handleBack);
+      backHandler.remove();
     };
   }, [handleBack]);
   return (

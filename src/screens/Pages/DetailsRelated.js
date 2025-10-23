@@ -24,9 +24,9 @@ const DetailsRelated = ({route}) => {
   useEffect(() => {
     navigation.setOptions({title: route.params.title});
 
-    BackHandler.addEventListener('hardwareBackPress', handleBack);
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBack);
     return () => {
-      BackHandler.removeEventListener('hardwareBackPress', handleBack);
+      backHandler.remove();
     };
   }, [handleBack]);
 

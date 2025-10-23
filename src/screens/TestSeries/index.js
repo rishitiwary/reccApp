@@ -1,10 +1,13 @@
 import React, {useRef, useState, useCallback, useEffect} from 'react';
-import {StyleSheet, SafeAreaView, BackHandler} from 'react-native';
+import {StyleSheet, SafeAreaView, BackHandler, View} from 'react-native';
 import {WebView} from 'react-native-webview';
 import {AuthContext} from '../../components/AuthContext';
 import {Loader} from '../../components/Loader';
 import { MAIN_URL } from '../../config/config';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 const TestSeries = ({route}) => {
+  const insets = useSafeAreaInsets();
   const webView = useRef();
   const {userInfo} = React.useContext(AuthContext);
   let id = JSON.parse(userInfo).data.id;
@@ -20,15 +23,14 @@ const TestSeries = ({route}) => {
     }
     return false;
   }, [canGoBack]);
-
   useEffect(() => {
-    BackHandler.addEventListener('hardwareBackPress', handleBack);
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBack);
     return () => {
-      BackHandler.removeEventListener('hardwareBackPress', handleBack);
+      backHandler.remove(); // ✅ Call remove() on the subscription
     };
   }, [handleBack]);
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <View style={{ flex: 1, backgroundColor: '#f9fafb', paddingBottom: insets.bottom }}>
       <Loader status={spinner} />
       <WebView
         onLoadStart={() => setSpinner(true)}
@@ -38,7 +40,7 @@ const TestSeries = ({route}) => {
         }}
         onLoadProgress={event => setCanGoBack(event.nativeEvent.canGoBack)}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 export default TestSeries;
