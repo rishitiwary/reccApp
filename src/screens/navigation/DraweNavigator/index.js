@@ -5,9 +5,10 @@ import EditProfile from '../../Editprofile';
 import ChangePassword from '../../ChangePassword';
 import AboutUs from '../../Aboutus';
 import Teachers from '../../Chat/Teachers';
+import AIAssistant from '../../AIAssistant';
 import CustomDrawer from '../CustomDrawer';
 import Ionicons from '@react-native-vector-icons/ionicons';
-
+import Chat from '../../Chat';
 const Drawer = createDrawerNavigator();
 import NavigationScreens from '../navigationScreens';
 
@@ -105,7 +106,34 @@ export default function MyDrawer() {
           tabBarHideOnKeyboard: true,
         }}
       />
+   {/* AI Assistant */}
+   <Drawer.Screen
+        name="AI Assistant"
+        component={AIAssistant}
+        options={{
+          title: '  AI Assistant',
+          drawerIcon: ({ color, focused }) => (
+            <Ionicons 
+              name={focused ? "sparkles" : "sparkles-outline"} 
+              size={24} 
+              color={color} 
+            />
+          ),
+        }}
+        screenOptions={{
+          tabBarHideOnKeyboard: true,
+        }}
+      />
 
+   {/* ADD THIS - Chat Screen */}
+   {/* <Drawer.Screen
+        name="Chat"
+        component={Chat}
+        options={{
+          title: '  Chat',
+          drawerItemStyle: { height: 0 }, // Hide from drawer menu
+        }}
+      /> */}
       {/* Chat Now */}
       <Drawer.Screen
         name="Chat Now"
@@ -125,6 +153,7 @@ export default function MyDrawer() {
         }}
       />
 
+   
       {/* About Us */}
       <Drawer.Screen
         name="about-us"

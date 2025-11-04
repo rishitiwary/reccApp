@@ -17,12 +17,14 @@ import {Loader} from '../../components/Loader';
 import {AuthContext} from '../../components/AuthContext';
 import {BottomNavigation} from '../../components/BottomNavigation';
 import {Topmenu} from '../../components/Topmenu';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 const Teachers = () => {
   const navigation = useNavigation();
   const {userInfo} = React.useContext(AuthContext);
   const [getData, setData] = useState([]);
   const [loadingStatus, setLoadingStatus] = useState(true);
 
+  const insets = useSafeAreaInsets();
   const createConnection = async item => {
     try {
       setLoadingStatus(true);
@@ -41,9 +43,12 @@ const Teachers = () => {
             JSON.stringify(response.data.message),
             ToastAndroid.SHORT,
           );
-          navigation.navigate('Chat', {
-            user_id: sid,
-            connectionId: response.data.connectionId,
+          navigation.navigate('HomeScreen', {
+            screen: 'Chat',
+            params: {
+              user_id: sid,
+              connectionId: response.data.connectionId,
+            },
           });
         })
         .catch(function (error) {
@@ -73,6 +78,7 @@ const Teachers = () => {
   }, []);
 
   return (
+    <View style={{ flex: 1, backgroundColor: '#f9fafb', paddingBottom: insets.bottom }}>
     <SafeAreaView style={styles.container}>
       <Loader status={loadingStatus} />
 
@@ -129,6 +135,7 @@ const Teachers = () => {
 
       <BottomNavigation />
     </SafeAreaView>
+    </View>
   );
 };
 export default Teachers;
