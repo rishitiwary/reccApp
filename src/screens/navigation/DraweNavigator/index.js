@@ -135,7 +135,7 @@ export default function MyDrawer() {
         }}
       /> */}
       {/* Chat Now */}
-      <Drawer.Screen
+      {/* <Drawer.Screen
         name="Chat Now"
         component={Teachers}
         options={{
@@ -151,7 +151,7 @@ export default function MyDrawer() {
         screenOptions={{
           tabBarHideOnKeyboard: true,
         }}
-      />
+      /> */}
 
    
       {/* About Us */}
