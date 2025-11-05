@@ -6,6 +6,8 @@ import ChangePassword from '../../ChangePassword';
 import AboutUs from '../../Aboutus';
 import Teachers from '../../Chat/Teachers';
 import AIAssistant from '../../AIAssistant';
+import DoubtSolver from '../../DoubtSolver';
+import AIExamGenerator from '../../AIExamGenerator';
 import CustomDrawer from '../CustomDrawer';
 import Ionicons from '@react-native-vector-icons/ionicons';
 import Chat from '../../Chat';
@@ -124,6 +126,44 @@ export default function MyDrawer() {
           tabBarHideOnKeyboard: true,
         }}
       />
+
+      {/* AI Doubt Solver */}
+      <Drawer.Screen
+        name="AI Doubt Solver"
+        component={DoubtSolver}
+        options={{
+          title: '  AI Doubt Solver',
+          drawerIcon: ({ color, focused }) => (
+            <Ionicons 
+              name={focused ? "bulb" : "bulb-outline"} 
+              size={24} 
+              color={color} 
+            />
+          ),
+        }}
+        screenOptions={{
+          tabBarHideOnKeyboard: true,
+        }}
+      />
+
+      {/* AI Exam Generator */}
+      {/* <Drawer.Screen
+        name="AI Exam Generator"
+        component={AIExamGenerator}
+        options={{
+          title: '  AI Exam Generator',
+          drawerIcon: ({ color, focused }) => (
+            <Ionicons 
+              name={focused ? "school" : "school-outline"} 
+              size={24} 
+              color={color} 
+            />
+          ),
+        }}
+        screenOptions={{
+          tabBarHideOnKeyboard: true,
+        }}
+      /> */}
 
    {/* ADD THIS - Chat Screen */}
    {/* <Drawer.Screen
