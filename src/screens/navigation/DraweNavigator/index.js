@@ -6,6 +6,7 @@ import ChangePassword from '../../ChangePassword';
 import AboutUs from '../../Aboutus';
 import Teachers from '../../Chat/Teachers';
 import AIAssistant from '../../AIAssistant';
+import DoubtSolver from '../../DoubtSolver';
 import CustomDrawer from '../CustomDrawer';
 import Ionicons from '@react-native-vector-icons/ionicons';
 import Chat from '../../Chat';
@@ -115,6 +116,25 @@ export default function MyDrawer() {
           drawerIcon: ({ color, focused }) => (
             <Ionicons 
               name={focused ? "sparkles" : "sparkles-outline"} 
+              size={24} 
+              color={color} 
+            />
+          ),
+        }}
+        screenOptions={{
+          tabBarHideOnKeyboard: true,
+        }}
+      />
+
+      {/* AI Doubt Solver */}
+      <Drawer.Screen
+        name="AI Doubt Solver"
+        component={DoubtSolver}
+        options={{
+          title: '  AI Doubt Solver',
+          drawerIcon: ({ color, focused }) => (
+            <Ionicons 
+              name={focused ? "bulb" : "bulb-outline"} 
               size={24} 
               color={color} 
             />
