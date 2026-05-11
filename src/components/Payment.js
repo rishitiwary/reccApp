@@ -10,7 +10,7 @@ export const Payment = ([
   let options = {
     description: item.title,
     image:
-      'https://recc.org.in/public/uploads/certificate/IMG_20240611_161940.png',
+      'https://backend.recc.org.in/public/uploads/certificate/IMG_20240611_161940.png',
     currency: 'INR',
     key: razorpay_key,
     amount: price * 100,

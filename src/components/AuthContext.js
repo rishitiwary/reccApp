@@ -2,6 +2,7 @@ import React, {createContext, useState, useEffect} from 'react';
 import {BASE_URL} from '../config/config';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {AppState, Alert} from 'react-native';
 export const AuthContext = createContext();
 export const AuthProvider = ({children}) => {
   const [userInfo, setUserInfo] = useState([]);
@@ -211,22 +212,72 @@ export const AuthProvider = ({children}) => {
         setIsLoading(false);
       });
   };
-  //isloggedin
+  //verify device - check if user is still logged in on this device
+  const verifyDevice = async () => {
+    try {
+      const userInfoStr = await AsyncStorage.getItem('userInfo');
+      if (!userInfoStr) {
+        return;
+      }
 
+      const userInfoData = JSON.parse(userInfoStr);
+      const email = userInfoData?.data?.email;
+      const deviceId = await AsyncStorage.getItem('deviceId');
+
+      if (!email || !deviceId) {
+        return;
+      }
+
+      const response = await axios.post(`${BASE_URL}/verify-device`, {
+        email: email,
+        device_id: deviceId,
+      });
+
+      if (!response.data.success) {
+        // User has been logged out from another device
+        await AsyncStorage.removeItem('userInfo');
+        setUserInfo([]);
+        
+        Alert.alert(
+          'Logged Out',
+          response.data.message || 'You have been logged out because you logged in on another device.',
+          [{text: 'OK'}]
+        );
+      }
+    } catch (error) {
+      console.log('Device verification error:', error);
+    }
+  };
+
+  //isloggedin
   const isloggedin = async () => {
     try {
-     
       setMessage(null);
       let userInfo = await AsyncStorage.getItem('userInfo');
       if (userInfo) {
         setUserInfo(userInfo);
+        // Verify device on app start
+        await verifyDevice();
       }
     } catch (e) {
       console.log('logged in error', e);
     }
   };
+
   useEffect(() => {
     isloggedin();
+
+    // Listen for app state changes (foreground/background)
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      if (nextAppState === 'active') {
+        // App came to foreground - verify device
+        verifyDevice();
+      }
+    });
+
+    return () => {
+      subscription?.remove();
+    };
   }, []);
   return (
     <AuthContext.Provider
@@ -237,6 +288,7 @@ export const AuthProvider = ({children}) => {
         forgot,
         UpdateProfile,
         UpdatePassword,
+        verifyDevice,
         message,
         isLoading,
         userInfo,

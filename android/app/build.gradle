@@ -82,8 +82,8 @@ android {
         applicationId "com.recc"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 48
-        versionName "1.65"
+        versionCode 50
+        versionName "1.67"
     }
     signingConfigs {
          release {
@@ -130,7 +130,6 @@ dependencies {
     } else {
         implementation jscFlavor
     }
-    implementation project(':react-native-fs')
 }
 
 project.ext.react = [

@@ -20,6 +20,9 @@
       android:theme="@style/AppTheme"
       android:supportsRtl="true">
 
+      <property
+        android:name="android.app.16kb_page_size_enabled"
+        android:value="true" />
       
       <activity
         android:name=".MainActivity"

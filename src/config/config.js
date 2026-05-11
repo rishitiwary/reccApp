@@ -5,7 +5,7 @@ export const DYNAMIC_URL = 'https://backend.recc.org.in/read/';
 export const CHAT_URL = 'https://backend.recc.org.in/LiveChat/';
 export const DIS_GRP_URL = 'https://backend.recc.org.in/DiscussionGroup/';
 // export const razorpay_key = 'rzp_live_jJQPZ05uCdNgNS';
-export const razorpay_key = 'rzp_test_Rf5wtIGvhjhFUi';
+export const razorpay_key = 'rzp_live_SmOnTzTXtrgvn0';
 
 // Google Gemini AI API Key
 // Get your FREE API key from: https://aistudio.google.com/app/apikey

@@ -20,6 +20,7 @@ const MyPurchase = () => {
   let id = JSON.parse(userInfo).data.email;
 
   const handleFetchData = async () => {
+    console.log("${BASE_URL}",`${BASE_URL}/mypurchased/${id}`);
     try {
       setSpinner(true);
       let result = await axios({

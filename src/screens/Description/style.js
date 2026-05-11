@@ -141,7 +141,7 @@ fullscreenVideo: {
     right: 0,
     height: hp(10),
     width: wp(80),
-    backgroundColor: 'red',
+    backgroundColor: 'transparent',
     zIndex: 10,
   },
 
@@ -151,7 +151,7 @@ fullscreenVideo: {
     left: 0,
     height: hp(9.5),
     width: wp(10),
-    backgroundColor: 'blue',
+    backgroundColor: 'transparent',
     zIndex: 10,
   },
 
@@ -161,7 +161,7 @@ fullscreenVideo: {
     right: 0,
     height: hp(12),
     width: wp(50),
-    backgroundColor: 'green',
+    backgroundColor: 'transparent',
     zIndex: 10,
   },
 
