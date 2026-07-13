@@ -8,7 +8,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
 } from 'react-native';
-import axios from 'axios';
+import api from '../../services/api';
 import {BASE_URL, IMG_URL} from '../../config/config';
 import {useNavigation} from '@react-navigation/native';
 import styles from './style';
@@ -46,7 +46,7 @@ const HomeScreen = () => {
   const handleFetchData = async () => {
     try {
       setSpinner(true);
-      let result = await axios({
+      let result = await api({
         method: 'GET',
         url: `${BASE_URL}/coursecategory/`,
         headers: {
@@ -62,7 +62,7 @@ const HomeScreen = () => {
   };
   const popularCourses = async () => {
     try {
-      let result = await axios({
+      let result = await api({
         method: 'GET',
         url: `${BASE_URL}/popularcourse/`,
         headers: {

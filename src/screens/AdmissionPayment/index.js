@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text} from 'react-native';
 import {BASE_URL} from '../../config/config';
-import axios from 'axios';
+import api from '../../services/api';
 import {AuthContext} from '../../components/AuthContext';
 import styles from '../../screens/Home/style';
 import {TouchableOpacity} from 'react-native-gesture-handler';
@@ -20,7 +20,7 @@ const AdmissionPayment = () => {
   };
   const handleFetchData = async () => {
     try {
-      let result = await axios({
+      let result = await api({
         method: 'GET',
         url: `${BASE_URL}/userInfo/${JSON.parse(userInfo).data.id}`,
         headers: {

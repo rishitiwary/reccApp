@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useContext, useCallback} from 'react';
-import axios from 'axios';
-import {BASE_URL, IMG_URL} from '../../config/config';
+import api from '../../services/api';
+import {BASE_URL, IMG_URL, institute_id} from '../../config/config';
 import {AuthContext} from '../../components/AuthContext';
 import {
   View,
@@ -48,17 +48,17 @@ const Course = ({route}) => {
     uid: JSON.parse(userInfo).data.id,
   };
   if (type === 'popular') {
-    url = `${BASE_URL}/popularcourse?type=all&email=${email}&keyword=${keyword}`;
+    url = `${BASE_URL}/popularcourse?type=all&email=${email}&keyword=${keyword}&institute_id=${institute_id}`;
   } else if (type === 'allCourses') {
-    url = `${BASE_URL}/popularcourse?type=allCourses&email=${email}&keyword=${keyword}`;
+    url = `${BASE_URL}/popularcourse?type=allCourses&email=${email}&keyword=${keyword}&institute_id=${institute_id}`;
   } else {
-    url = `${BASE_URL}/coursebycategory/${type}?email=${email}&keyword=${keyword}`;
+    url = `${BASE_URL}/coursebycategory/${type}?email=${email}&keyword=${keyword}&institute_id=${institute_id}`;
   }
 
   const fetchData = useCallback(async () => {
     try {
       setSpinner(true);
-      const result = await axios.get(url, {
+      const result = await api.get(url, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -85,7 +85,7 @@ const Course = ({route}) => {
   const searchData = useCallback(async () => {
     try {
       setSpinner(true);
-      const result = await axios.get(url, {
+      const result = await api.get(url, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

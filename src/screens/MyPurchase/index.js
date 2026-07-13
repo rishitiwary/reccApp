@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import axios from 'axios';
+import api from '../../services/api';
 import { BASE_URL, IMG_URL } from '../../config/config';
 import { View, Text, FlatList, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { AuthContext } from '../../components/AuthContext';
@@ -23,7 +23,7 @@ const MyPurchase = () => {
     console.log("${BASE_URL}",`${BASE_URL}/mypurchased/${id}`);
     try {
       setSpinner(true);
-      let result = await axios({
+      let result = await api({
         method: 'GET',
         url: `${BASE_URL}/mypurchased/${id}`,
         headers: {

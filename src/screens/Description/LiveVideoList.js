@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import axios from 'axios';
+import api from '../../services/api';
 import {BASE_URL} from '../../config/config';
 import {
   View,
@@ -32,7 +32,7 @@ const LiveVideoList = () => {
     setKeyword(val);
     try {
       // setSpinner(true);
-      let result = await axios({
+      let result = await api({
         method: 'GET',
         url: url,
         headers: {
@@ -56,7 +56,7 @@ const LiveVideoList = () => {
   const handleFetchData = async () => {
     try {
       setLoadingStatus(true);
-      let result = await axios({
+      let result = await api({
         method: 'GET',
         url: `${BASE_URL}/liveVideos/${id}`,
         headers: {

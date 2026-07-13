@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import axios from 'axios';
+import api from '../services/api';
 import {BASE_URL} from '../config/config';
 import {FlatList, View, Text, TouchableOpacity} from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
@@ -13,7 +13,7 @@ export const Topmenu = () => {
   
   const handleFetchData = async () => {
     try {
-      let result = await axios({
+      let result = await api({
         method: 'GET',
         url: `${BASE_URL}/menus`,
         headers: {

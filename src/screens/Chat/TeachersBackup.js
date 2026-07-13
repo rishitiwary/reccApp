@@ -9,7 +9,7 @@ import {
   SafeAreaView,
   ScrollView
 } from 'react-native';
-import axios from 'axios';
+import api from '../../services/api';
 import {BASE_URL, IMG_URL} from '../../config/config';
 import {useNavigation} from '@react-navigation/native';
 import styles from './style';
@@ -28,7 +28,7 @@ const Teachers = () => {
       setLoadingStatus(true);
       const sid = JSON.parse(userInfo).data.id;
       const tid = item.id;
-      let connection = await axios({
+      let connection = await api({
         method: 'GET',
         url: `${BASE_URL}/chat_connections/${tid}/${sid}`,
         headers: {
@@ -55,7 +55,7 @@ const Teachers = () => {
   const handleFetchData = async () => {
     try {
       setLoadingStatus(true);
-      let result = await axios({
+      let result = await api({
         method: 'GET',
         url: `${BASE_URL}/staff/`,
         headers: {

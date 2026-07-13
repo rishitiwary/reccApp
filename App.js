@@ -6,6 +6,8 @@ import StackNavigator from './src/screens/navigation/StackNavigator';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DeviceInfo from 'react-native-device-info';
 import NetInfo from '@react-native-community/netinfo';
+import api from './src/services/api';
+import {institute_id} from './src/config/config';
 
 const App = () => {
   const [netInfo, setNetInfo] = useState('');
@@ -14,6 +16,9 @@ const App = () => {
     const init = async () => {
       let deviceId = await DeviceInfo.getUniqueId();
       await AsyncStorage.setItem('deviceId', deviceId);
+      
+      // Fetch site settings on app start (like PublicHeader in institute-app)
+      fetchSiteSettings();
     };
 
     init();
@@ -30,6 +35,18 @@ const App = () => {
       unsubscribe();
     };
   }, []);
+
+  const fetchSiteSettings = async () => {
+    try {
+      const response = await api.get(`/site-settings?institute_id=${institute_id}`);
+      if (response.data.success) {
+        // Store in AsyncStorage (like localStorage in institute-app)
+        await AsyncStorage.setItem('settings', JSON.stringify(response.data.data));
+      }
+    } catch (error) {
+      console.error('Error fetching site settings:', error);
+    }
+  };
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

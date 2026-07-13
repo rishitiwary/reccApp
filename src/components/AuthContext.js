@@ -1,6 +1,6 @@
 import React, {createContext, useState, useEffect} from 'react';
-import {BASE_URL} from '../config/config';
-import axios from 'axios';
+import {BASE_URL, institute_id} from '../config/config';
+import api from '../services/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {AppState, Alert} from 'react-native';
 export const AuthContext = createContext();
@@ -24,6 +24,7 @@ export const AuthProvider = ({children}) => {
     formData.append('password', data.password);
     formData.append('confirm_password', data.confirm_password);
     formData.append('mobileno', data.mobile);
+    formData.append('institute_id', institute_id);
     if (data.image != '') {
       const fileName = data.image.path.split('/');
       formData.append('file', {
@@ -33,10 +34,7 @@ export const AuthProvider = ({children}) => {
       });
     }
 
-    await axios({
-      method: 'POST',
-      url: `${BASE_URL}/registration`,
-      data: formData,
+    await api.post('/registration', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -73,15 +71,11 @@ export const AuthProvider = ({children}) => {
     };
 
 
-    await axios({
-      method: 'POST',
-      url: `${BASE_URL}/login`,
-      data: formData,
+    await api.post('/login', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     })
-
       .then(function (response) {
         let success = JSON.stringify(response.data.success);
         if (success == 'true') {
@@ -108,10 +102,7 @@ export const AuthProvider = ({children}) => {
       email: data.email,
     };
 
-    await axios({
-      method: 'POST',
-      url: `${BASE_URL}/forgotPassword`,
-      data: formData,
+    await api.post('/forgotPassword', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -135,10 +126,7 @@ export const AuthProvider = ({children}) => {
       address: data.address,
       mobile: data.mobile,
     };
-    await axios({
-      method: 'POST',
-      url: `${BASE_URL}/updateProfile`,
-      data: formData,
+    await api.post('/updateProfile', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -165,10 +153,7 @@ export const AuthProvider = ({children}) => {
     };
 
     console.log(formData);
-    await axios({
-      method: 'POST',
-      url: `${BASE_URL}/changePassword`,
-      data: formData,
+    await api.post('/changePassword', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -193,10 +178,7 @@ export const AuthProvider = ({children}) => {
     let formData = {
       id: res.id,
     };
-    await axios({
-      method: 'POST',
-      url: `${BASE_URL}/logout`,
-      data: formData,
+    await api.post('/logout', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -228,7 +210,7 @@ export const AuthProvider = ({children}) => {
         return;
       }
 
-      const response = await axios.post(`${BASE_URL}/verify-device`, {
+      const response = await api.post('/verify-device', {
         email: email,
         device_id: deviceId,
       });

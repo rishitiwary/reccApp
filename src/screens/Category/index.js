@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import axios from 'axios';
+import api from '../../services/api';
 import {BASE_URL, IMG_URL} from '../../config/config';
 import {
   View,
@@ -33,7 +33,7 @@ const Category = () => {
   const [activityIndicator, setActivityIndicator] = useState(true);
   const handleFetchData = async () => {
     try {
-      let result = await axios({
+      let result = await api({
         method: 'GET',
         url: `${BASE_URL}/categories`,
         headers: {

@@ -14,7 +14,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {AuthContext} from '../../components/AuthContext';
 import LoginCheck from '../../components/LoginCheck';
 import {BASE_URL, IMG_URL} from '../../config/config';
-import axios from 'axios';
+import api from '../../services/api';
 import styles from './enhancedStyle';
 
 const CourseDetails = ({route}) => {
@@ -43,7 +43,7 @@ const CourseDetails = ({route}) => {
       courseId,
       email,
     };
-    await axios({
+    await api({
       method: 'POST',
       url: `${BASE_URL}/courseViewCounts`,
       data: formData,
@@ -72,7 +72,7 @@ const CourseDetails = ({route}) => {
 
   const demoVideos = async () => {
     try {
-      let result = await axios({
+      let result = await api({
         method: 'GET',
         url: `${BASE_URL}/demovideos/${course.id}`,
         headers: {

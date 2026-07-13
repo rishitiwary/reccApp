@@ -3,7 +3,7 @@ import {View, Text, FlatList, Image, TouchableOpacity} from 'react-native';
 import styles from '../Chat/style';
 import {useNavigation} from '@react-navigation/native';
 import {Loader} from '../../components/Loader';
-import axios from 'axios';
+import api from '../../services/api';
 import {BASE_URL} from '../../config/config';
 import {ScrollView} from 'react-native-gesture-handler';
 import {Topmenu} from '../../components/Topmenu';
@@ -17,7 +17,7 @@ const DetailsRelated = ({route}) => {
   const handleFetchData = async () => {
     try {
       setSpinner(true);
-      let result = await axios({
+      let result = await api({
         method: 'GET',
         url: `${BASE_URL}/related/${route.params.id}/${url}`,
         headers: {

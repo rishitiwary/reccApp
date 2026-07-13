@@ -5,7 +5,7 @@ import YoutubePlayer from 'react-native-youtube-iframe';
 import MaterialIcons from '@react-native-vector-icons/material-icons';
 import FontAwesome from '@react-native-vector-icons/fontawesome';
 import {BASE_URL} from '../../config/config';
-import axios from 'axios';
+import api from '../../services/api';
 import {View, TouchableOpacity, useWindowDimensions, Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {AuthContext} from '../../components/AuthContext';
@@ -67,7 +67,7 @@ const Live = ({route}) => {
   });
 
   const allmessage = async () => {
-    await axios({
+    await api({
       method: 'GET',
       url: `${BASE_URL}/chatLiveStreamMessage/${connectionId}`,
       headers: {
@@ -147,7 +147,7 @@ const Live = ({route}) => {
   };
   const sendmessage = async data => {
     console.log(data);
-    await axios({
+    await api({
       method: 'POST',
       url: `${BASE_URL}/sendLiveStreamMessage`,
       data: data,

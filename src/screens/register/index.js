@@ -1,6 +1,6 @@
 import React, {useState, useContext, useEffect} from 'react';
 import {View, Text, TouchableOpacity, ScrollView} from 'react-native';
-import axios from 'axios';
+import api from '../../services/api';
 import {BASE_URL} from '../../config/config';
 import {Dropdown} from 'react-native-element-dropdown';
 import styles from './style';
@@ -48,7 +48,7 @@ const Register = () => {
   const handleTradegroup = async () => {
     try {
       setSpinner(true);
-      let result = await axios({
+      let result = await api({
         method: 'GET',
         url: `${BASE_URL}/tradegroup`,
         headers: {
@@ -64,7 +64,7 @@ const Register = () => {
   const handleTrade = async id => {
     try {
       setSpinner(true);
-      let result = await axios({
+      let result = await api({
         method: 'GET',
         url: `${BASE_URL}/trade/${id}`,
         headers: {
@@ -81,7 +81,7 @@ const Register = () => {
   const handleBatch = async batches => {
     try {
       setSpinner(true);
-      let result = await axios({
+      let result = await api({
         method: 'GET',
         url: `${BASE_URL}/batches?batch_id=${batches}`,
         headers: {
@@ -99,7 +99,7 @@ const Register = () => {
   const handleClass = async () => {
     try {
       setSpinner(true);
-      let result = await axios({
+      let result = await api({
         method: 'GET',
         url: `${BASE_URL}/class`,
         headers: {

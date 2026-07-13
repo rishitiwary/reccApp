@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useMemo} from 'react';
-import axios from 'axios';
+import api from '../../services/api';
 import {BASE_URL, IMG_URL} from '../../config/config';
 import {
   View,
@@ -26,7 +26,7 @@ const Jobs = ({route}) => {
   pageName = 'Purchase Books';
 
   const handleFetchData = useMemo(async () => {
-    let result = await axios({
+    let result = await api({
       method: 'GET',
       url: url,
       headers: {

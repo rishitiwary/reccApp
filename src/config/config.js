@@ -1,11 +1,12 @@
-export const BASE_URL = 'https://backend.recc.org.in/api';
-export const IMG_URL = 'https://backend.recc.org.in/';
-export const MAIN_URL = 'https://backend.recc.org.in/';
-export const DYNAMIC_URL = 'https://backend.recc.org.in/read/';
-export const CHAT_URL = 'https://backend.recc.org.in/LiveChat/';
-export const DIS_GRP_URL = 'https://backend.recc.org.in/DiscussionGroup/';
+export const BASE_URL = 'https://admin.brainershub.in/api';
+export const IMG_URL = 'https://admin.brainershub.in';
+export const MAIN_URL = 'https://admin.brainershub.in/';
+export const DYNAMIC_URL = 'https://admin.brainershub.in/read/';
+export const CHAT_URL = 'https://admin.brainershub.in/LiveChat/';
+export const DIS_GRP_URL = 'https://admin.brainershub.in/DiscussionGroup/';
 // export const razorpay_key = 'rzp_live_jJQPZ05uCdNgNS';
 export const razorpay_key = 'rzp_live_SmOnTzTXtrgvn0';
+export const institute_id = '8';
 
 // Google Gemini AI API Key
 // Get your FREE API key from: https://aistudio.google.com/app/apikey

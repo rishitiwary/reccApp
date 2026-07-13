@@ -1,7 +1,7 @@
 import React from 'react';
 import {useState, useEffect, memo} from 'react';
 import DeviceInfo from 'react-native-device-info';
-import axios from 'axios';
+import api from '../services/api';
 import {BASE_URL} from '../config/config';
 import {AuthContext} from './AuthContext';
 const LoginCheck = () => {
@@ -15,7 +15,7 @@ const LoginCheck = () => {
   };
   const handleFetchData = async () => {
     try {
-      let result = await axios({
+      let result = await api({
         method: 'GET',
         url: `${BASE_URL}/loginInfo/${number}`,
         headers: {

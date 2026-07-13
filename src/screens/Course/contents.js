@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../../services/api';
 import { BASE_URL, IMG_URL } from '../../config/config';
 import { View, Text, FlatList, TouchableOpacity, Image, ScrollView } from 'react-native';
 import styles from '../MyPurchase/style';
@@ -68,7 +68,7 @@ const Contents = ({ route }) => {
 
   const handleFetchData = async () => {
     try {
-      let result = await axios({
+      let result = await api({
         method: 'GET',
         url: `${BASE_URL}/subfolder/${courseId}/${folderId}`,
         headers: {
@@ -81,7 +81,7 @@ const Contents = ({ route }) => {
 
   const getContents = async () => {
     try {
-      let result = await axios({
+      let result = await api({
         method: 'GET',
         url: `${BASE_URL}/contents/${courseId}/${folderId}`,
         headers: {

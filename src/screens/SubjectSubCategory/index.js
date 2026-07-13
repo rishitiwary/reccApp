@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useMemo} from 'react';
-import axios from 'axios';
+import api from '../../services/api';
 import {BASE_URL, IMG_URL} from '../../config/config';
 import Book from '../../../assets/images/book.jpeg';
 import {
@@ -28,7 +28,7 @@ const SubjectSubCategory = ({route}) => {
   
   const handleFetchData = async () => {
     try {
-      let result = await axios({
+      let result = await api({
         method: 'GET',
         url: `${BASE_URL}/subjectfolder/${id}`,
         headers: {

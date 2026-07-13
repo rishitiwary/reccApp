@@ -9,8 +9,8 @@ import {
   Linking,
   Dimensions,
 } from 'react-native';
-import axios from 'axios';
-import { BASE_URL, IMG_URL } from '../../config/config';
+import api from '../../services/api';
+import { BASE_URL, IMG_URL, institute_id } from '../../config/config';
 import { useNavigation } from '@react-navigation/native';
 import { BottomNavigation } from '../../components/BottomNavigation';
 import { AuthContext } from '../../components/AuthContext';
@@ -75,13 +75,7 @@ const HomeScreen = () => {
   const handleFetchData = async () => {
     try {
       setSpinner(true);
-      let result = await axios({
-        method: 'GET',
-        url: `${BASE_URL}/coursecategory/`,
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      let result = await api.get(`/coursecategory?institute_id=${institute_id}`);
       setData(result.data);
       setSpinner(false);
     } catch (error) {
@@ -92,13 +86,7 @@ const HomeScreen = () => {
 
   const popularCourses = async () => {
     try {
-      let result = await axios({
-        method: 'GET',
-        url: `${BASE_URL}/popularcourse?email=${email}`,
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      let result = await api.get(`/popularcourse?email=${email}&institute_id=${institute_id}`);
       setCourses(result.data);
     } catch (error) {
       console.log(error);

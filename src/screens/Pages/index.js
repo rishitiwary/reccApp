@@ -3,8 +3,8 @@ import {View, Text, FlatList, TouchableOpacity, Image} from 'react-native';
 import styles from '../Chat/style';
 import {useNavigation} from '@react-navigation/native';
 import {Loader} from '../../components/Loader';
-import axios from 'axios';
-import {BASE_URL} from '../../config/config';
+import api from '../../services/api';
+import {BASE_URL, institute_id} from '../../config/config';
 import {Topmenu} from '../../components/Topmenu';
 const Pages = ({route}) => {
   const name = route.params.item.name;
@@ -15,9 +15,9 @@ const Pages = ({route}) => {
   const handleFetchData = async () => {
     try {
       setSpinner(true);
-      let result = await axios({
+      let result = await api({
         method: 'GET',
-        url: `${BASE_URL}/pages/${url}`,
+        url: `${BASE_URL}/pages/${url}?institute_id=${institute_id}`,
         headers: {
           'Content-Type': 'multipart/form-data',
         },
