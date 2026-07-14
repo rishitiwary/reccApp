@@ -1,47 +1,46 @@
-const COLORS = {
-  // Base colors
+// Color scheme matching Career Foundation app
+export const COLORS = {
+  // Header
+  headerBlue: '#0066FF',
+  headerText: '#FFFFFF',
+  
+  // Badges
+  notificationRed: '#FF3B30',
+  liveRed: '#FF3B30',
+  newBatchYellow: '#FFD700',
+  
+  // Quick Actions
+  coursesBlue: '#007AFF',
+  testSeriesGreen: '#34C759',
+  freeClassesRed: '#FF3B30',
+  pdfNotesPurple: '#AF52DE',
+  resultsOrange: '#FF9500',
+  liveClassCyan: '#5AC8FA',
+  
+  // Course Cards
+  jsscBlue: '#1E3A8A',
+  jsscGreen: '#059669',
+  jtetPurple: '#6B21A8',
+  enrollBlue: '#007AFF',
+  
+  // Text
+  headingBlack: '#1F2937',
+  bodyGray: '#6B7280',
+  lightGray: '#9CA3AF',
+  
+  // Background
+  screenBg: '#F3F4F6',
+  cardWhite: '#FFFFFF',
+  bgColor: '#2563eb', // Primary blue background
+  
+  // Ratings
+  starYellow: '#FFD700',
+  
+  // Success
+  successGreen: '#10B981',
+  
+  // Additional
   white: '#FFFFFF',
-  dark: '#000000',
-  
-  // Primary colors - Modern Blue
-  primary: '#2563eb',
-  primaryDark: '#1d4ed8',
-  primaryLight: '#3b82f6',
-  primaryLighter: '#60a5fa',
-  
-  // Background colors
-  bgColor: '#2563eb',
-  bgColorDark: '#1e40af',
-  bgColorLight: '#dbeafe',
-  bgGray: '#f9fafb',
-  bgGrayLight: '#f3f4f6',
-  
-  // Text colors
-  textDark: '#111827',
-  textGray: '#374151',
-  textGrayLight: '#6b7280',
-  textGrayLighter: '#9ca3af',
-  
-  // Border colors
-  border: '#e5e7eb',
-  borderLight: '#f0f0f0',
-  
-  // Secondary colors
-  secondary: '#fedac5',
-  
-  // Accent colors
-  success: '#22c55e',
-  successDark: '#16a34a',
-  warning: '#f59e0b',
-  warningLight: '#fbbf24',
-  danger: '#ef4444',
-  
-  // Legacy support (for backward compatibility)
-  light: '#f9fafb',
-  grey: '#6b7280',
-  bgColorlight: '#3b82f6',
-  linearGradient: ['#3b82f6', '#2563eb'],
-  linearGradientDark: ['#2563eb', '#1d4ed8'],
 };
 
 export default COLORS;

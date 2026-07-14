@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
   buynow: {
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: COLORS.success,
+    backgroundColor: COLORS.successGreen,
     width: moderateScale(100),
     height: moderateScale(40),
     borderRadius: 8,

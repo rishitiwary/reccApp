@@ -139,7 +139,7 @@ const Course = ({route}) => {
               <View style={styles.row}>
                 <View style={styles.image}>
                   <Image
-                    source={{uri: IMG_URL + `${item.course_thumbnail}`}}
+                    source={{uri: `${item.course_thumbnail}`}}
                     style={styles.image}
                     resizeMode="stretch"
                   />

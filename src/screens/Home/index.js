@@ -9,6 +9,7 @@ import {
   Linking,
   Dimensions,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from '../../services/api';
 import { BASE_URL, IMG_URL, institute_id } from '../../config/config';
 import { useNavigation } from '@react-navigation/native';
@@ -16,11 +17,19 @@ import { BottomNavigation } from '../../components/BottomNavigation';
 import { AuthContext } from '../../components/AuthContext';
 import { Loader } from '../../components/Loader';
 import { Payment } from '../../components/Payment';
-import { Topmenu } from '../../components/Topmenu';
 import VersionCheck from 'react-native-version-check';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import FontAwesome from '@react-native-vector-icons/fontawesome';
 import { LinearGradient } from 'react-native-linear-gradient';
+
+// New components
+import AppHeader from '../../components/Header/AppHeader';
+import HeroBanner from '../../components/Home/HeroBanner';
+import QuickActions from '../../components/Home/QuickActions';
+import SectionHeader from '../../components/Home/SectionHeader';
+import CourseCard from '../../components/Home/CourseCard';
+import LiveClassCard from '../../components/Home/LiveClassCard';
+import COLORS from '../../config/colors';
 
 const { width } = Dimensions.get('window');
 
@@ -33,6 +42,8 @@ const HomeScreen = () => {
   const userName = JSON.parse(userInfo).data.firstname;
   const [getData, setData] = useState([]);
   const [courses, setCourses] = useState([]);
+  const [liveClasses, setLiveClasses] = useState([]);
+  const [settings, setSettings] = useState(null);
 
   // Check android version and send for auto update
   const checkForUpdate = () => {
@@ -93,80 +104,71 @@ const HomeScreen = () => {
     }
   };
 
+  const fetchLiveClasses = async () => {
+    try {
+      let result = await api.get(`/liveVideos/${email}`);
+      console.log('Live classes response:', result.data);
+      if (result.data && Array.isArray(result.data)) {
+        setLiveClasses(result.data);
+      } else if (result.data) {
+        // If it's an object with data property
+        setLiveClasses(result.data.data || []);
+      }
+    } catch (error) {
+      console.log('Error fetching live classes:', error);
+    }
+  };
+
+  const loadSettings = async () => {
+    try {
+      const cachedSettings = await AsyncStorage.getItem('settings');
+      if (cachedSettings) {
+        const settingsData = JSON.parse(cachedSettings);
+        setSettings(settingsData);
+      }
+    } catch (error) {
+      console.log('Error loading settings:', error);
+    }
+  };
+
   useEffect(() => {
+    // Hide the navigation header since we have custom AppHeader
+    navigation.setOptions({ headerShown: false });
+    
     checkForUpdate();
-    navigation.setOptions({ title: 'Raj Economics (RECC)' });
+    loadSettings();
     handleFetchData();
     popularCourses();
+    fetchLiveClasses();
   }, []);
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#f9fafb', paddingBottom: insets.bottom }}>
+    <View style={{ flex: 1, backgroundColor: '#1d6bde' ,paddingBottom: insets.bottom}}>
       <Loader status={spinner} />
 
-      {/* Top Menu */}
-      <View style={{ backgroundColor: '#fff', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 4, elevation: 2 }}>
-        <Topmenu />
-      </View>
+      {/* New App Header */}
+      <AppHeader />
 
       <ScrollView 
         keyboardShouldPersistTaps="always" 
         nestedScrollEnabled
         showsVerticalScrollIndicator={false}
+        style={{ flex: 1, backgroundColor: '#f8f9fa' }}
+        contentContainerStyle={{ paddingBottom: insets.bottom }}
       >
-        {/* Welcome Header */}
-     
+        {/* Hero Banner Carousel */}
+        <HeroBanner />
+
+        {/* Quick Actions */}
+        <QuickActions />
+
         {/* Popular Courses Section */}
-        <View style={{ marginTop: 24, marginBottom: 16 }}>
-          <View style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            paddingHorizontal: 20,
-            marginBottom: 16,
-          }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <View style={{
-                width: 36,
-                height: 36,
-                borderRadius: 18,
-                backgroundColor: '#fef3c7',
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginRight: 10,
-              }}>
-                <FontAwesome name="fire" color="#f59e0b" size={18} />
-              </View>
-              <Text style={{
-                fontSize: 20,
-                fontWeight: '700',
-                color: '#111827',
-              }}>
-                Popular Courses
-              </Text>
-            </View>
-            <TouchableOpacity
-              onPress={() =>
-                coursesByCategory({ type: 'popular', name: 'Popular Courses' })
-              }
-              activeOpacity={0.7}
-            >
-              <View style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                gap: 4,
-              }}>
-                <Text style={{
-                  fontSize: 14,
-                  fontWeight: '600',
-                  color: '#2563eb',
-                }}>
-                  See All
-                </Text>
-                <FontAwesome name="chevron-right" color="#2563eb" size={12} />
-              </View>
-            </TouchableOpacity>
-          </View>
+        <View style={{ marginBottom: 16, backgroundColor: '#fff' }}>
+          <SectionHeader
+            title="Trending Courses"
+            icon="fire"
+            onViewAll={() => coursesByCategory({ type: 'popular', name: 'Popular Courses' })}
+          />
 
           <FlatList
             data={Array.isArray(courses.data) ? courses.data : []}
@@ -175,335 +177,57 @@ const HomeScreen = () => {
             removeClippedSubviews
             initialNumToRender={3}
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ paddingHorizontal: 16 }}
+            contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 16 }}
             renderItem={({ item }) => (
-              <TouchableOpacity
+              <CourseCard
+                course={item}
                 onPress={() => handleDetails(item)}
-                activeOpacity={0.95}
-              >
-                <View style={{
-                  width: 280,
-                  marginRight: 16,
-                  backgroundColor: '#fff',
-                  borderRadius: 18,
-                  overflow: 'hidden',
-                  shadowColor: '#000',
-                  shadowOffset: { width: 0, height: 4 },
-                  shadowOpacity: 0.12,
-                  shadowRadius: 16,
-                  elevation: 6,
-                  borderWidth: 1,
-                  borderColor: '#f0f0f0',
-                }}>
-                  {/* Course Image */}
-                  <View style={{ position: 'relative' }}>
-                    <Image
-                      source={{ uri: IMG_URL + `${item.course_thumbnail}` }}
-                      style={{
-                        width: '100%',
-                        height: 160,
-                        resizeMode: 'cover',
-                      }}
-                    />
-                    
-                    {/* Gradient Overlay */}
-                    <LinearGradient
-                      colors={['transparent', 'rgba(0,0,0,0.4)']}
-                      style={{
-                        position: 'absolute',
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        height: 60,
-                      }}
-                    />
-
-                    {/* Discount Badge */}
-                    {item.discount > 0 && (
-                      <View style={{
-                        position: 'absolute',
-                        top: 12,
-                        left: 12,
-                      }}>
-                        <LinearGradient
-                          colors={['#f59e0b', '#d97706']}
-                          start={{ x: 0, y: 0 }}
-                          end={{ x: 1, y: 1 }}
-                          style={{
-                            paddingHorizontal: 12,
-                            paddingVertical: 6,
-                            borderRadius: 10,
-                            shadowColor: '#f59e0b',
-                            shadowOffset: { width: 0, height: 3 },
-                            shadowOpacity: 0.6,
-                            shadowRadius: 6,
-                            elevation: 5,
-                            borderWidth: 2,
-                            borderColor: 'rgba(255,255,255,0.3)',
-                          }}
-                        >
-                          <Text style={{
-                            color: '#fff',
-                            fontSize: 13,
-                            fontWeight: '800',
-                            letterSpacing: 0.5,
-                          }}>
-                            {item.discount}% OFF
-                          </Text>
-                        </LinearGradient>
-                      </View>
-                    )}
-
-                    {/* Status Badge */}
-                    {item.purchased && (
-                      <View style={{
-                        position: 'absolute',
-                        top: 12,
-                        right: 12,
-                        backgroundColor: 'rgba(34, 197, 94, 0.95)',
-                        paddingHorizontal: 10,
-                        paddingVertical: 5,
-                        borderRadius: 8,
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        gap: 4,
-                      }}>
-                        <FontAwesome name="check-circle" color="#fff" size={11} />
-                        <Text style={{
-                          color: '#fff',
-                          fontSize: 10,
-                          fontWeight: '700',
-                        }}>
-                          OWNED
-                        </Text>
-                      </View>
-                    )}
-                  </View>
-
-                  {/* Course Content */}
-                  <View style={{ padding: 14 }}>
-                    <Text numberOfLines={2} style={{
-                      fontSize: 16,
-                      fontWeight: '700',
-                      color: '#111827',
-                      marginBottom: 8,
-                      lineHeight: 22,
-                    }}>
-                      {item.title}
-                    </Text>
-
-                    {/* Category with Badge */}
-                    <View style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      marginBottom: 12,
-                      backgroundColor: '#f0f7ff',
-                      paddingHorizontal: 10,
-                      paddingVertical: 6,
-                      borderRadius: 8,
-                      alignSelf: 'flex-start',
-                    }}>
-                      <FontAwesome name="tag" color="#2563eb" size={11} />
-                      <Text style={{
-                        fontSize: 12,
-                        color: '#2563eb',
-                        marginLeft: 5,
-                        fontWeight: '600',
-                      }}>
-                        {item.tradeName}
-                      </Text>
-                    </View>
-
-                    {/* Price Section with Background */}
-                    <View style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      marginBottom: 14,
-                      backgroundColor: '#fef3c7',
-                      paddingHorizontal: 10,
-                      paddingVertical: 8,
-                      borderRadius: 10,
-                    }}>
-                      <FontAwesome name="rupee" color="#d97706" size={14} />
-                      <Text style={{
-                        fontSize: 20,
-                        fontWeight: '800',
-                        color: '#d97706',
-                        marginLeft: 4,
-                      }}>
-                        {(item.price - item.price * (item.discount / 100)).toFixed(2)}
-                      </Text>
-                      {item.discount > 0 && (
-                        <Text style={{
-                          fontSize: 14,
-                          color: '#9ca3af',
-                          textDecorationLine: 'line-through',
-                          marginLeft: 8,
-                        }}>
-                          ₹{item.price.toFixed(2)}
-                        </Text>
-                      )}
-                    </View>
-
-                    {/* Action Buttons */}
-                    <View style={{ flexDirection: 'row', gap: 8 }}>
-                      {item.purchased ? (
-                        <TouchableOpacity
-                          onPress={(e) => {
-                            e.stopPropagation();
-                            handleClick(item);
-                          }}
-                          activeOpacity={0.8}
-                          style={{ flex: 1 }}
-                        >
-                          <LinearGradient
-                            colors={['#10b981', '#059669', '#047857']}
-                            start={{ x: 0, y: 0 }}
-                            end={{ x: 1, y: 1 }}
-                            style={{
-                              paddingVertical: 12,
-                              borderRadius: 10,
-                              alignItems: 'center',
-                              shadowColor: '#10b981',
-                              shadowOffset: { width: 0, height: 3 },
-                              shadowOpacity: 0.4,
-                              shadowRadius: 6,
-                              elevation: 4,
-                            }}
-                          >
-                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-                              <FontAwesome name="play-circle" color="#fff" size={15} />
-                              <Text style={{
-                                color: '#fff',
-                                fontSize: 14,
-                                fontWeight: '700',
-                              }}>
-                                Continue Learning
-                              </Text>
-                            </View>
-                          </LinearGradient>
-                        </TouchableOpacity>
-                      ) : (
-                        <>
-                          <TouchableOpacity
-                            onPress={(e) => {
-                              e.stopPropagation();
-                              Payment([{ purchaseVal, item }]);
-                            }}
-                            activeOpacity={0.8}
-                            style={{ flex: 1 }}
-                          >
-                            <LinearGradient
-                              colors={['#3b82f6', '#2563eb', '#1d4ed8']}
-                              start={{ x: 0, y: 0 }}
-                              end={{ x: 1, y: 1 }}
-                              style={{
-                                paddingVertical: 12,
-                                borderRadius: 10,
-                                alignItems: 'center',
-                                shadowColor: '#2563eb',
-                                shadowOffset: { width: 0, height: 3 },
-                                shadowOpacity: 0.4,
-                                shadowRadius: 6,
-                                elevation: 4,
-                              }}
-                            >
-                              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-                                <FontAwesome name="shopping-cart" color="#fff" size={14} />
-                                <Text style={{
-                                  color: '#fff',
-                                  fontSize: 14,
-                                  fontWeight: '700',
-                                }}>
-                                  Buy Now
-                                </Text>
-                              </View>
-                            </LinearGradient>
-                          </TouchableOpacity>
-
-                          <TouchableOpacity
-                            onPress={(e) => {
-                              e.stopPropagation();
-                              handleDetails(item);
-                            }}
-                            activeOpacity={0.8}
-                          >
-                            <LinearGradient
-                              colors={['#f3f4f6', '#e5e7eb']}
-                              start={{ x: 0, y: 0 }}
-                              end={{ x: 0, y: 1 }}
-                              style={{
-                                paddingVertical: 12,
-                                paddingHorizontal: 14,
-                                borderRadius: 10,
-                                borderWidth: 1,
-                                borderColor: '#d1d5db',
-                              }}
-                            >
-                              <FontAwesome name="info-circle" color="#6b7280" size={14} />
-                            </LinearGradient>
-                          </TouchableOpacity>
-                        </>
-                      )}
-                    </View>
-                  </View>
-                </View>
-              </TouchableOpacity>
+                onBuyNow={(course, purchaseData) => Payment([{ purchaseVal, item: course }])}
+                onContinueLearning={(course) => handleClick(course)}
+                purchaseVal={purchaseVal}
+                width={200}
+              />
             )}
           />
         </View>
 
+        {/* Live Classes Section */}
+        <View style={{ marginTop: 0, marginBottom: 16, backgroundColor: '#fff' }}>
+          <SectionHeader
+            title="Live Classes"
+            icon="video-camera"
+            onViewAll={() => console.log('View All Live Classes')}
+          />
+          <View style={{ paddingHorizontal: 20, paddingBottom: 12 }}>
+            {liveClasses.length > 0 ? (
+              liveClasses.map((liveClass, index) => (
+                <LiveClassCard
+                  key={index}
+                  liveClass={liveClass}
+                  onJoin={(cls) => console.log('Join live class:', cls)}
+                />
+              ))
+            ) : (
+              <LiveClassCard
+                liveClass={{
+                  title: 'Jharkhand GK Marathon',
+                  subtitle: 'Top 1000 Questions Series',
+                  instructor_name: 'Sandeep Sir',
+                  start_time: new Date(Date.now() + 2745000).toISOString(), // 45 mins 45 secs from now
+                }}
+                onJoin={(cls) => console.log('Join live class:', cls)}
+              />
+            )}
+          </View>
+        </View>
+
         {/* Course Category Section */}
         <View style={{ marginTop: 16, paddingBottom: 100 }}>
-          <View style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            paddingHorizontal: 20,
-            marginBottom: 16,
-          }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <View style={{
-                width: 36,
-                height: 36,
-                borderRadius: 18,
-                backgroundColor: '#dbeafe',
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginRight: 10,
-              }}>
-                <FontAwesome name="th-large" color="#2563eb" size={16} />
-              </View>
-              <Text style={{
-                fontSize: 20,
-                fontWeight: '700',
-                color: '#111827',
-              }}>
-                Course Categories
-              </Text>
-            </View>
-            <TouchableOpacity
-              onPress={() =>
-                coursesByCategory({ type: 'allCourses', name: 'All Courses' })
-              }
-              activeOpacity={0.7}
-            >
-              <View style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                gap: 4,
-              }}>
-                <Text style={{
-                  fontSize: 14,
-                  fontWeight: '600',
-                  color: '#2563eb',
-                }}>
-                  See All
-                </Text>
-                <FontAwesome name="chevron-right" color="#2563eb" size={12} />
-              </View>
-            </TouchableOpacity>
-          </View>
+          <SectionHeader
+            title="Course Categories"
+            icon="th-large"
+            onViewAll={() => coursesByCategory({ type: 'allCourses', name: 'All Courses' })}
+          />
 
           <View style={{
             flexDirection: 'row',

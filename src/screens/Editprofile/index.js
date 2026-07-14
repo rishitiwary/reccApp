@@ -15,8 +15,10 @@ import {AuthContext} from '../../components/AuthContext';
 import {BottomNavigation} from '../../components/BottomNavigation';
 import {Topmenu} from '../../components/Topmenu';
 import COLORS from '../../config/colors';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const EditProfile = () => {
+  const insets = useSafeAreaInsets();
   const {UpdateProfile, isLoading} = useContext(AuthContext);
   const navigation = useNavigation();
   const [data, setData] = useState({
@@ -85,7 +87,7 @@ const EditProfile = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {paddingBottom: insets.bottom}]}>
     <View style={styles.headerBanner}><Text style={styles.headerText}>Personal Details</Text></View>
     {/* <View style={styles.header}>
       <Topmenu />

@@ -7,8 +7,10 @@ import {useNavigation} from '@react-navigation/native';
 import {Topmenu} from '../../components/Topmenu';
 import styles from './style';
 import {BottomNavigation} from '../../components/BottomNavigation';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 let type = '';
 const Subject = ({route}) => {
+  const insets = useSafeAreaInsets();
   let flag = route.params.flag;
   let id = route.params.id;
   type = route.params.type;
@@ -58,7 +60,7 @@ const Subject = ({route}) => {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {paddingBottom: insets.bottom}]}>
       <View style={styles.header}>
         <Topmenu />
       </View>

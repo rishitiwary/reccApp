@@ -14,8 +14,10 @@ import {Topmenu} from '../../components/Topmenu';
 import styles from './style';
 import {BottomNavigation} from '../../components/BottomNavigation';
 import COLORS from '../../config/colors';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const Category = () => {
+  const insets = useSafeAreaInsets();
   const navigation = useNavigation();
   const handleClick = item => {
     let courseId = item.id;
@@ -54,7 +56,7 @@ const Category = () => {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {paddingBottom: insets.bottom}]}>
       {activityIndicator ? (
         <ActivityIndicator
           color={COLORS.bgColor}

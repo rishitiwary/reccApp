@@ -16,7 +16,7 @@ const MyPurchase = () => {
   const { userInfo } = React.useContext(AuthContext);
   const navigation = useNavigation();
   const [spinner, setSpinner] = useState(true);
-  const [getData, setData] = useState([]);
+  const [getData, setData] = useState({ data: [] });
   let id = JSON.parse(userInfo).data.email;
 
   const handleFetchData = async () => {
@@ -96,7 +96,7 @@ const MyPurchase = () => {
   );
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#f9fafb', paddingBottom: insets.bottom }}>
+    <View style={{ flex: 1, backgroundColor: '#f9fafb' }}>
       <Loader status={spinner} />
 
       <View style={{ backgroundColor: '#fff', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 4, elevation: 2 }}>
@@ -107,16 +107,16 @@ const MyPurchase = () => {
     
 
       <View style={{ flex: 1 }}>
-        {!spinner && getData.data && getData.data.length === 0 ? (
+        {!spinner && (!getData.data || getData.data.length === 0) ? (
           <EmptyState />
         ) : (
           <FlatList
-            data={getData.data}
-            keyExtractor={item => String(item.id)}
+            data={Array.isArray(getData.data) ? getData.data : []}
+            keyExtractor={(item, index) => item?.id ? String(item.id) : String(index)}
             removeClippedSubviews
             initialNumToRender={4}
             scrollEnabled={true}
-            contentContainerStyle={{ padding: 16, paddingBottom: 80 }}
+            contentContainerStyle={{ padding: 16, paddingBottom: 100 + insets.bottom }}
             renderItem={({ item }) => (
               <View style={{
                 marginBottom: 12,
@@ -134,15 +134,28 @@ const MyPurchase = () => {
                 <View style={{ flexDirection: 'row', padding: 12 }}>
                   {/* Course Image - Left Side */}
                   <View style={{ position: 'relative' }}>
-                    <Image
-                      source={{ uri: IMG_URL + `${item.course_thumbnail}` }}
-                      style={{
+                    {item.course_thumbnail ? (
+                      <Image
+                        source={{ uri:item.course_thumbnail }}
+                        style={{
+                          width: 110,
+                          height: 140,
+                          borderRadius: 10,
+                        }}
+                        resizeMode="cover"
+                      />
+                    ) : (
+                      <View style={{
                         width: 110,
                         height: 140,
                         borderRadius: 10,
-                        resizeMode: 'cover',
-                      }}
-                    />
+                        backgroundColor: '#e5e7eb',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}>
+                        <FontAwesome name="book" size={30} color="#9ca3af" />
+                      </View>
+                    )}
                     <View style={{
                       position: 'absolute',
                       top: 6,
@@ -177,60 +190,64 @@ const MyPurchase = () => {
                         {item.title}
                       </Text>
 
-                      <View style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        marginBottom: 8,
-                      }}>
-                        <FontAwesome name="tag" color="#6b7280" size={11} />
-                        <Text style={{
-                          fontSize: 12,
-                          color: '#6b7280',
-                          marginLeft: 5,
+                      {item.tradeName && (
+                        <View style={{
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          marginBottom: 8,
                         }}>
-                          {item.tradeName}
-                        </Text>
-                      </View>
+                          <FontAwesome name="tag" color="#6b7280" size={11} />
+                          <Text style={{
+                            fontSize: 12,
+                            color: '#6b7280',
+                            marginLeft: 5,
+                          }}>
+                            {item.tradeName}
+                          </Text>
+                        </View>
+                      )}
 
                       {/* Price */}
-                      <View style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        marginBottom: 10,
-                      }}>
-                        <Text style={{
-                          fontSize: 16,
-                          fontWeight: '700',
-                          color: '#2563eb',
+                      {item.price && (
+                        <View style={{
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          marginBottom: 10,
                         }}>
-                          ₹{(item.price - item.price * (item.discount / 100)).toFixed(2)}
-                        </Text>
-                        <Text style={{
-                          fontSize: 12,
-                          color: '#9ca3af',
-                          textDecorationLine: 'line-through',
-                          marginLeft: 6,
-                        }}>
-                          ₹{item.price.toFixed(2)}
-                        </Text>
-                        {item.discount > 0 && (
-                          <View style={{
-                            marginLeft: 6,
-                            backgroundColor: '#22c55e',
-                            paddingHorizontal: 6,
-                            paddingVertical: 2,
-                            borderRadius: 4,
+                          <Text style={{
+                            fontSize: 16,
+                            fontWeight: '700',
+                            color: '#2563eb',
                           }}>
-                            <Text style={{
-                              color: '#fff',
-                              fontSize: 9,
-                              fontWeight: '700',
+                            ₹{(item.price - item.price * ((item.discount || 0) / 100)).toFixed(2)}
+                          </Text>
+                          <Text style={{
+                            fontSize: 12,
+                            color: '#9ca3af',
+                            textDecorationLine: 'line-through',
+                            marginLeft: 6,
+                          }}>
+                            ₹{item.price.toFixed(2)}
+                          </Text>
+                          {item.discount > 0 && (
+                            <View style={{
+                              marginLeft: 6,
+                              backgroundColor: '#22c55e',
+                              paddingHorizontal: 6,
+                              paddingVertical: 2,
+                              borderRadius: 4,
                             }}>
-                              {item.discount}% OFF
-                            </Text>
-                          </View>
-                        )}
-                      </View>
+                              <Text style={{
+                                color: '#fff',
+                                fontSize: 9,
+                                fontWeight: '700',
+                              }}>
+                                {item.discount}% OFF
+                              </Text>
+                            </View>
+                          )}
+                        </View>
+                      )}
                     </View>
 
                     {/* Action Buttons */}

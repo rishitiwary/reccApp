@@ -7,12 +7,14 @@ import {useNavigation} from '@react-navigation/native';
 
 import {BottomNavigation} from '../../components/BottomNavigation';
 import {Topmenu} from '../../components/Topmenu';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const AboutUs = () => {
+  const insets = useSafeAreaInsets();
   const navigation = useNavigation();
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {paddingBottom: insets.bottom}]}>
       <View style={styles.headerBanner}>
         <Text style={styles.headerText}>About Us</Text>
       </View>
