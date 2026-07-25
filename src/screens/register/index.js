@@ -1,5 +1,12 @@
 import React, {useState, useContext, useEffect} from 'react';
-import {View, Text, TouchableOpacity, ScrollView} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
 import api from '../../services/api';
 import {BASE_URL} from '../../config/config';
 import {Dropdown} from 'react-native-element-dropdown';
@@ -14,8 +21,8 @@ import {useNavigation} from '@react-navigation/native';
 import {AuthContext} from '../../components/AuthContext';
 import COLORS from '../../config/colors';
 import AntDesign from '@react-native-vector-icons/ant-design';
-import ImagePicker from 'react-native-image-crop-picker';
 import {Loader} from '../../components/Loader';
+
 const Register = () => {
   const navigation = useNavigation();
   const genderData = [
@@ -32,15 +39,23 @@ const Register = () => {
   const [batch, setBatch] = useState([]);
   const [emailValidError, setEmailValidError] = useState('');
   const [numberValidError, setNumberValidError] = useState('');
+  
+  // Focus states
+  const [nameFocused, setNameFocused] = useState(false);
+  const [emailFocused, setEmailFocused] = useState(false);
+  const [mobileFocused, setMobileFocused] = useState(false);
+  const [passwordFocused, setPasswordFocused] = useState(false);
+  const [confirmPasswordFocused, setConfirmPasswordFocused] = useState(false);
+
   const chooseType = type => {
     setType(type);
-
     setData({
       ...data,
       registration_type: type,
       check_usernameInputChange: false,
     });
   };
+
   if (responseMessage !== null) {
     navigation.push('Login');
   }
@@ -61,6 +76,7 @@ const Register = () => {
       console.log(error);
     }
   };
+
   const handleTrade = async id => {
     try {
       setSpinner(true);
@@ -71,13 +87,13 @@ const Register = () => {
           'Content-Type': 'multipart/form-data',
         },
       });
-
       setTrade(result.data);
       setSpinner(false);
     } catch (error) {
       console.log(error);
     }
   };
+
   const handleBatch = async batches => {
     try {
       setSpinner(true);
@@ -88,7 +104,6 @@ const Register = () => {
           'Content-Type': 'multipart/form-data',
         },
       });
-
       setBatch(result.data);
       setSpinner(false);
     } catch (error) {
@@ -113,22 +128,6 @@ const Register = () => {
     }
   };
 
-  const chooseImage = () => {
-    ImagePicker.openPicker({
-      width: 300,
-      height: 400,
-      cropping: true,
-    }).then(image => {
-      console.log(image);
-      // console.log(image.path.replace('file://', ''));
-      // setImage(image.path);
-      setData({
-        ...data,
-        image: image,
-      });
-    });
-  };
-
   const [data, setData] = useState({
     registration_type: type,
     username: '',
@@ -146,6 +145,7 @@ const Register = () => {
     check_emailInputChange: false,
     check_mobileInputChange: false,
     secureTextEntry: true,
+    confirmsecureTextEntry: true,
   });
 
   const usernameInputChange = val => {
@@ -163,15 +163,15 @@ const Register = () => {
       });
     }
   };
+
   const emailInputChange = val => {
-  handleValidEmail(val);
+    handleValidEmail(val);
     if (val.length != 0) {
       setData({
         ...data,
         email: val,
         check_emailInputChange: true,
       });
-      
     } else {
       setData({
         ...data,
@@ -180,8 +180,8 @@ const Register = () => {
       });
     }
   };
+
   const mobileInputChange = val => {
-    
     handleValidNumber(val);
     if (val.length != 0) {
       setData({
@@ -199,43 +199,33 @@ const Register = () => {
   };
 
   const handlePassword = val => {
-    if (val.length != 0) {
-      setData({
-        ...data,
-        password: val,
-      });
-    } else {
-      setData({
-        ...data,
-        password: val,
-      });
-    }
+    setData({
+      ...data,
+      password: val,
+    });
   };
+
   const confirmHandlePassword = val => {
-    if (val.length != 0) {
-      setData({
-        ...data,
-        confirm_password: val,
-      });
-    } else {
-      setData({
-        ...data,
-        confirm_password: val,
-      });
-    }
+    setData({
+      ...data,
+      confirm_password: val,
+    });
   };
+
   const updateSecureText = () => {
     setData({
       ...data,
       secureTextEntry: !data.secureTextEntry,
     });
   };
+
   const updateConfirmSecureText = () => {
     setData({
       ...data,
       confirmsecureTextEntry: !data.confirmsecureTextEntry,
     });
   };
+
   const handleRegister = () => {
     if (
       data.username.length > 0 &&
@@ -253,9 +243,9 @@ const Register = () => {
       alert('Please fill all the fields.');
     }
   };
+
   const handleValidEmail = val => {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-    
     if (val.length === 0) {
       setEmailValidError('Email address must be enter.');
     } else if (reg.test(val) === false) {
@@ -263,357 +253,333 @@ const Register = () => {
     } else if (reg.test(val) === true) {
       setEmailValidError('');
     }
-    };
-    const handleValidNumber = val => {
-      const reg = /^[0]?[7896]/;
-      if (val.length === 0) {
-        setNumberValidError('Mobile number must be enter.');
-      } else if (reg.test(val) === false) {
-        setNumberValidError('Enter valid mobile number.');
-      } else if (reg.test(val) === true) {
-        setNumberValidError('');
-      }
-      };
-    
+  };
+
+  const handleValidNumber = val => {
+    const reg = /^[0]?[7896]/;
+    if (val.length === 0) {
+      setNumberValidError('Mobile number must be enter.');
+    } else if (reg.test(val) === false) {
+      setNumberValidError('Enter valid mobile number.');
+    } else if (reg.test(val) === true) {
+      setNumberValidError('');
+    }
+  };
+
   useEffect(() => {
     handleTradegroup();
     handleClass();
   }, []);
 
   return (
-    <View style={styles.container}>
+    <LinearGradient colors={['#2563eb', '#1d4ed8']} style={styles.container}>
       <Loader status={spinner} />
-      <Loader status={isLoading} />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.keyboardView}>
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}>
+          {/* Header */}
+          <Animatable.View
+            animation="fadeInDown"
+            duration={1000}
+            style={styles.headerContainer}>
+            <Text style={styles.welcomeTitle}>Create Account</Text>
+            <Text style={styles.welcomeSubtitle}>
+              Sign up to start your learning journey
+            </Text>
+          </Animatable.View>
 
-      <Animatable.View style={styles.header} animation="fadeInDownBig">
-        <Text style={styles.text}>Register Now</Text>
-      </Animatable.View>
-
-      <Animatable.View style={styles.footer} animation="fadeInUpBig">
-        <ScrollView contentContainerStyle={{flexGrow: 1}}>
-          {/* <View style={styles.typeButton}>
-            <TouchableOpacity onPress={() => chooseType(1)}>
-              <View style={type == 1 ? styles.activeButton : styles.default}>
-                <Text style={styles.typeText}>Online</Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => chooseType(0)}>
-              <View style={type == 0 ? styles.activeButton : styles.default}>
-                <Text style={styles.typeText}>Offline</Text>
-              </View>
-            </TouchableOpacity>
-          </View> */}
-          {/* for online */}
-          {type == 1 ? (
-            <View
-              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-              <Dropdown
-                style={styles.dropdown}
-                placeholderStyle={styles.placeholderStyle}
-                selectedTextStyle={styles.selectedTextStyle}
-                inputSearchStyle={styles.inputSearchStyle}
-                iconStyle={styles.iconStyle}
-                itemTextStyle={styles.itemTextStyle}
-                data={tradegroup}
-                search
-                maxHeight={300}
-                labelField="name"
-                valueField="id"
-                placeholder="Select Course"
-                searchPlaceholder="Search..."
-                value={typeof id !== 'undefined' ? id : ''}
-                onChange={item => {
-                  handleTrade(item.id);
-                  setData({
-                    ...data,
-                    tradegroupId: item.id,
-                  });
-                }}
-                renderLeftIcon={() => (
-                  <AntDesign
-                    style={styles.icon}
-                    color="black"
-                    name="Safety"
-                    size={20}
-                  />
-                )}
-              />
-              <Dropdown
-                style={styles.dropdown}
-                placeholderStyle={styles.placeholderStyle}
-                selectedTextStyle={styles.selectedTextStyle}
-                inputSearchStyle={styles.inputSearchStyle}
-                iconStyle={styles.iconStyle}
-                itemTextStyle={styles.itemTextStyle}
-                data={trade}
-                search
-                maxHeight={300}
-                labelField="name"
-                valueField="id"
-                placeholder="Select Course"
-                searchPlaceholder="Search..."
-                value={typeof id !== 'undefined' ? id : ''}
-                onChange={item => {
-                  setData({
-                    ...data,
-                    tradeId: item.id,
-                  });
-                }}
-                renderLeftIcon={() => (
-                  <AntDesign
-                    style={styles.icon}
-                    color="black"
-                    name="Safety"
-                    size={20}
-                  />
-                )}
-              />
-            </View>
-          ) : (
-            ''
-          )}
-
-          {/* for Offline */}
-          {type == 0 ? (
-            <View
-              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-              <Dropdown
-                style={styles.dropdown}
-                placeholderStyle={styles.placeholderStyle}
-                selectedTextStyle={styles.selectedTextStyle}
-                inputSearchStyle={styles.inputSearchStyle}
-                iconStyle={styles.iconStyle}
-                itemTextStyle={styles.itemTextStyle}
-                data={classes}
-                search
-                maxHeight={300}
-                labelField="class"
-                valueField="id"
-                placeholder="Select Category"
-                searchPlaceholder="Search..."
-                value={typeof id !== 'undefined' ? id : ''}
-                onChange={item => {
-                  setData({
-                    ...data,
-                    classId: item.id,
-                  });
-                  handleBatch(item.batches);
-                }}
-                renderLeftIcon={() => (
-                  <AntDesign
-                    style={styles.icon}
-                    color="black"
-                    name="Safety"
-                    size={20}
-                  />
-                )}
-              />
-              <Dropdown
-                style={styles.dropdown}
-                placeholderStyle={styles.placeholderStyle}
-                selectedTextStyle={styles.selectedTextStyle}
-                inputSearchStyle={styles.inputSearchStyle}
-                iconStyle={styles.iconStyle}
-                itemTextStyle={styles.itemTextStyle}
-                data={batch}
-                search
-                maxHeight={300}
-                labelField="batch"
-                valueField="id"
-                placeholder="Select Batch"
-                searchPlaceholder="Search..."
-                value={typeof id !== 'undefined' ? id : ''}
-                onChange={item => {
-                  setData({
-                    ...data,
-                    batchId: item.id,
-                  });
-                }}
-                renderLeftIcon={() => (
-                  <AntDesign
-                    style={styles.icon}
-                    color="black"
-                    name="Safety"
-                    size={20}
-                  />
-                )}
-              />
-            </View>
-          ) : (
-            ''
-          )}
-          <View style={styles.action}>
-            <FontAwesome name="user-o" color="#05375a" size={20} />
-
-            <TextInput
-              placeholder=" Your Name"
-              style={styles.textInput}
-              autoCapitalize="none"
-              onChangeText={val => usernameInputChange(val)}
-              placeholderTextColor="#000"
-            />
-            {data.check_usernameInputChange ? (
-              <Animatable.View animation="bounceIn">
-                <Feather name="check-circle" color="green" size={20} />
-              </Animatable.View>
-            ) : null}
-          </View>
-          <View style={styles.action}>
-            <FontAwesome name="envelope-o" color="#05375a" size={20} />
-
-            <TextInput
-              placeholder="Email Address"
-              style={styles.textInput}
-              autoCapitalize="none"
-              onChangeText={val => emailInputChange(val)}
-              placeholderTextColor="#000"
-            />
-            {data.check_emailInputChange ? (
-              <Animatable.View animation="bounceIn">
-                <Feather name="check-circle" color="green" size={20} />
-              </Animatable.View>
-            ) : null}
+          {/* Register Card */}
+          <Animatable.View
+            animation="fadeInUp"
+            duration={1000}
+            delay={200}
+            style={styles.registerCard}>
             
-          </View>
-          {emailValidError ? <Text style={{color:'red'}}>{emailValidError}</Text> : null}
-          <View style={styles.action}>
-            <FontAwesome name="mobile" color="#05375a" size={20} />
+            {/* Course Selection */}
+            {/* {type == 1 && (
+              <View style={styles.dropdownRow}>
+                <View style={styles.dropdownHalf}>
+                  <Text style={styles.inputLabel}>Course Category</Text>
+                  <Dropdown
+                    style={styles.dropdown}
+                    placeholderStyle={styles.placeholderStyle}
+                    selectedTextStyle={styles.selectedTextStyle}
+                    inputSearchStyle={styles.inputSearchStyle}
+                    iconStyle={styles.iconStyle}
+                    itemTextStyle={styles.itemTextStyle}
+                    containerStyle={styles.dropdownContainer}
+                    data={tradegroup}
+                    search
+                    maxHeight={300}
+                    labelField="name"
+                    valueField="id"
+                    placeholder="Select"
+                    searchPlaceholder="Search..."
+                    onChange={item => {
+                      handleTrade(item.id);
+                      setData({
+                        ...data,
+                        tradegroupId: item.id,
+                      });
+                    }}
+                  />
+                </View>
 
-            <TextInput
-              placeholder="Mobile Number (10 digits only)"
-              style={styles.textInput}
-              autoCapitalize="none"
-              maxLength={10}
-              onChangeText={val => mobileInputChange(val)}
-              placeholderTextColor="#000"
-              keyboardType="numeric"
-              autoComplete='off'
-            />
-            {data.check_mobileInputChange ? (
-              <Animatable.View animation="bounceIn">
-                <Feather name="check-circle" color="green" size={20} />
-              </Animatable.View>
-            ) : null}
-          </View>
-          {numberValidError ? <Text style={{color:'red'}}>{numberValidError}</Text> : null}
-          <View style={{flexDirection: 'row'}}>
-            <Dropdown
-              style={styles.dropdownGender}
-              placeholderStyle={styles.placeholderStyle}
-              selectedTextStyle={styles.selectedTextStyle}
-              inputSearchStyle={styles.inputSearchStyle}
-              iconStyle={styles.iconStyle}
-              itemTextStyle={styles.itemTextStyle}
-              data={genderData}
-              search
-              maxHeight={300}
-              labelField="label"
-              valueField="value"
-              placeholder="Select Gender"
-              searchPlaceholder="Search..."
-              value={gender}
-              onChange={item => {
-                setGender(item.value);
-                setData({
-                  ...data,
-                  gender: item.value,
-                });
-              }}
-              renderLeftIcon={() => (
-                <AntDesign
-                  style={styles.icon}
-                  color="black"
-                  name="Safety"
-                  size={20}
+                <View style={styles.dropdownHalf}>
+                  <Text style={styles.inputLabel}>Course</Text>
+                  <Dropdown
+                    style={styles.dropdown}
+                    placeholderStyle={styles.placeholderStyle}
+                    selectedTextStyle={styles.selectedTextStyle}
+                    inputSearchStyle={styles.inputSearchStyle}
+                    iconStyle={styles.iconStyle}
+                    itemTextStyle={styles.itemTextStyle}
+                    containerStyle={styles.dropdownContainer}
+                    data={trade}
+                    search
+                    maxHeight={300}
+                    labelField="name"
+                    valueField="id"
+                    placeholder="Select"
+                    searchPlaceholder="Search..."
+                    onChange={item => {
+                      setData({
+                        ...data,
+                        tradeId: item.id,
+                      });
+                    }}
+                  />
+                </View>
+              </View>
+            )} */}
+
+            {/* Name Input */}
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>Full Name</Text>
+              <View
+                style={[
+                  styles.inputWrapper,
+                  nameFocused && styles.inputWrapperFocused,
+                ]}>
+                <FontAwesome
+                  name="user-o"
+                  size={18}
+                  color="#9ca3af"
+                  style={styles.inputIcon}
                 />
-              )}
-            />
-          </View>
+                <TextInput
+                  placeholder="Enter your full name"
+                  style={styles.textInput}
+                  autoCapitalize="words"
+                  onChangeText={val => usernameInputChange(val)}
+                  onFocus={() => setNameFocused(true)}
+                  onBlur={() => setNameFocused(false)}
+                  placeholderTextColor="#9ca3af"
+                />
+                {data.check_usernameInputChange && (
+                  <Feather name="check-circle" color="#10b981" size={20} />
+                )}
+              </View>
+            </View>
 
-          {/* <View style={styles.action}>
-            <FontAwesome name="photo" color="#05375a" size={20} />
-
-            <TouchableOpacity onPress={chooseImage}>
-              <Text style={{color: 'black'}}> Choose Image</Text>
-            </TouchableOpacity>
-          </View> */}
-          <View style={styles.action}>
-            <FontAwesome name="lock" color="#05375a" size={20} />
-
-            <TextInput
-              placeholder="  Your password"
-              style={styles.textInput}
-              autoCapitalize="none"
-              secureTextEntry={data.secureTextEntry ? true : false}
-              onChangeText={val => handlePassword(val)}
-              placeholderTextColor="#000"
-            />
-            <TouchableOpacity onPress={updateSecureText}>
-              {data.secureTextEntry ? (
-                <Feather name="eye-off" color="green" size={20} />
-              ) : (
-                <Feather name="eye" color="green" size={20} />
-              )}
-            </TouchableOpacity>
-          </View>
-          <View style={styles.action}>
-            <FontAwesome name="lock" color="#05375a" size={20} />
-
-            <TextInput
-              placeholder="Confirm Your password"
-              style={styles.textInput}
-              autoCapitalize="none"
-              secureTextEntry={data.confirmsecureTextEntry ? true : false}
-              onChangeText={val => confirmHandlePassword(val)}
-              placeholderTextColor="#000"
-            />
-            <TouchableOpacity onPress={updateConfirmSecureText}>
-              {data.confirmsecureTextEntry ? (
-                <Feather name="eye-off" color="green" size={20} />
-              ) : (
-                <Feather name="eye" color="green" size={20} />
-              )}
-            </TouchableOpacity>
-          </View>
-          <TouchableOpacity
-          disabled={emailValidError=='' && numberValidError=='' ?false:true}
-            onPress={() => {
-              handleRegister();
-            }}>
-            <LinearGradient
-              colors={COLORS.linearGradient}
-              style={styles.signIn}>
-              <Text style={styles.textSingIn}>Register Now</Text>
-              <MaterialIcons name="navigate-next" color="#fff" size={20} />
-            </LinearGradient>
-          </TouchableOpacity>
-          <View style={{flex: 1, flexDirection: 'row', marginTop: 10}}>
-            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-              <Text
+            {/* Email Input */}
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>Email Address</Text>
+              <View
                 style={[
-                  styles.textSingIn,
-                  {
-                    color: COLORS.dark,
-                  },
+                  styles.inputWrapper,
+                  emailFocused && styles.inputWrapperFocused,
+                  emailValidError && styles.inputWrapperError,
                 ]}>
-                Existing User ? Login
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('Forgot')}>
-              <Text
+                <FontAwesome
+                  name="envelope-o"
+                  size={18}
+                  color="#9ca3af"
+                  style={styles.inputIcon}
+                />
+                <TextInput
+                  placeholder="Enter your email"
+                  style={styles.textInput}
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  onChangeText={val => emailInputChange(val)}
+                  onFocus={() => setEmailFocused(true)}
+                  onBlur={() => setEmailFocused(false)}
+                  placeholderTextColor="#9ca3af"
+                />
+                {data.check_emailInputChange && !emailValidError && (
+                  <Feather name="check-circle" color="#10b981" size={20} />
+                )}
+              </View>
+              {emailValidError ? (
+                <Text style={styles.errorText}>{emailValidError}</Text>
+              ) : null}
+            </View>
+
+            {/* Mobile Input */}
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>Mobile Number</Text>
+              <View
                 style={[
-                  styles.textSingIn,
-                  {
-                    color: COLORS.bgColor,
-                  },
+                  styles.inputWrapper,
+                  mobileFocused && styles.inputWrapperFocused,
+                  numberValidError && styles.inputWrapperError,
                 ]}>
-                Forgot Password
-              </Text>
+                <FontAwesome
+                  name="mobile"
+                  size={22}
+                  color="#9ca3af"
+                  style={styles.inputIcon}
+                />
+                <TextInput
+                  placeholder="10 digit mobile number"
+                  style={styles.textInput}
+                  autoCapitalize="none"
+                  maxLength={10}
+                  keyboardType="numeric"
+                  onChangeText={val => mobileInputChange(val)}
+                  onFocus={() => setMobileFocused(true)}
+                  onBlur={() => setMobileFocused(false)}
+                  placeholderTextColor="#9ca3af"
+                />
+                {data.check_mobileInputChange && !numberValidError && (
+                  <Feather name="check-circle" color="#10b981" size={20} />
+                )}
+              </View>
+              {numberValidError ? (
+                <Text style={styles.errorText}>{numberValidError}</Text>
+              ) : null}
+            </View>
+
+            {/* Gender Dropdown */}
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>Gender</Text>
+              <Dropdown
+                style={styles.dropdownFull}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={styles.selectedTextStyle}
+                inputSearchStyle={styles.inputSearchStyle}
+                iconStyle={styles.iconStyle}
+                itemTextStyle={styles.itemTextStyle}
+                containerStyle={styles.dropdownContainer}
+                data={genderData}
+                maxHeight={300}
+                labelField="label"
+                valueField="value"
+                placeholder="Select your gender"
+                value={gender}
+                onChange={item => {
+                  setGender(item.value);
+                  setData({
+                    ...data,
+                    gender: item.value,
+                  });
+                }}
+              />
+            </View>
+
+            {/* Password Input */}
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>Password</Text>
+              <View
+                style={[
+                  styles.inputWrapper,
+                  passwordFocused && styles.inputWrapperFocused,
+                ]}>
+                <FontAwesome
+                  name="lock"
+                  size={18}
+                  color="#9ca3af"
+                  style={styles.inputIcon}
+                />
+                <TextInput
+                  placeholder="Create a password"
+                  style={styles.textInput}
+                  autoCapitalize="none"
+                  secureTextEntry={data.secureTextEntry}
+                  onChangeText={val => handlePassword(val)}
+                  onFocus={() => setPasswordFocused(true)}
+                  onBlur={() => setPasswordFocused(false)}
+                  placeholderTextColor="#9ca3af"
+                />
+                <TouchableOpacity onPress={updateSecureText} activeOpacity={0.7}>
+                  <Feather
+                    name={data.secureTextEntry ? 'eye-off' : 'eye'}
+                    color="#9ca3af"
+                    size={20}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {/* Confirm Password Input */}
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>Confirm Password</Text>
+              <View
+                style={[
+                  styles.inputWrapper,
+                  confirmPasswordFocused && styles.inputWrapperFocused,
+                ]}>
+                <FontAwesome
+                  name="lock"
+                  size={18}
+                  color="#9ca3af"
+                  style={styles.inputIcon}
+                />
+                <TextInput
+                  placeholder="Confirm your password"
+                  style={styles.textInput}
+                  autoCapitalize="none"
+                  secureTextEntry={data.confirmsecureTextEntry}
+                  onChangeText={val => confirmHandlePassword(val)}
+                  onFocus={() => setConfirmPasswordFocused(true)}
+                  onBlur={() => setConfirmPasswordFocused(false)}
+                  placeholderTextColor="#9ca3af"
+                />
+                <TouchableOpacity onPress={updateConfirmSecureText} activeOpacity={0.7}>
+                  <Feather
+                    name={data.confirmsecureTextEntry ? 'eye-off' : 'eye'}
+                    color="#9ca3af"
+                    size={20}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {/* Register Button */}
+            <TouchableOpacity
+              disabled={emailValidError != '' || numberValidError != ''}
+              onPress={() => handleRegister()}
+              activeOpacity={0.8}
+              style={styles.registerButtonWrapper}>
+              <LinearGradient
+                colors={['#2563eb', '#1d4ed8']}
+                start={{x: 0, y: 0}}
+                end={{x: 1, y: 0}}
+                style={styles.registerButton}>
+                <Text style={styles.registerButtonText}>Create Account</Text>
+                <MaterialIcons name="arrow-forward" color="#fff" size={24} />
+              </LinearGradient>
             </TouchableOpacity>
-          </View>
+
+            {/* Login Link */}
+            <View style={styles.loginContainer}>
+              <Text style={styles.loginText}>Already have an account? </Text>
+              <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                <Text style={styles.loginLink}>Sign In</Text>
+              </TouchableOpacity>
+            </View>
+          </Animatable.View>
+
+          {/* Bottom Spacing */}
+          <View style={styles.bottomSpacing} />
         </ScrollView>
-      </Animatable.View>
-    </View>
+      </KeyboardAvoidingView>
+    </LinearGradient>
   );
 };
 export default Register;

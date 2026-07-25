@@ -13,7 +13,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import { GEMINI_API_KEY } from '../../config/config';
 import { AuthContext } from '../../components/AuthContext';
 import Ionicons from '@react-native-vector-icons/ionicons';
-import { LinearGradient } from 'react-native-linear-gradient';
+import LinearGradient from 'react-native-linear-gradient';
 import ImageCropPicker from 'react-native-image-crop-picker';
 
 const DoubtSolver = () => {

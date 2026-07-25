@@ -20,7 +20,7 @@ import { Payment } from '../../components/Payment';
 import VersionCheck from 'react-native-version-check';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import FontAwesome from '@react-native-vector-icons/fontawesome';
-import { LinearGradient } from 'react-native-linear-gradient';
+import LinearGradient from 'react-native-linear-gradient';
 
 // New components
 import AppHeader from '../../components/Header/AppHeader';

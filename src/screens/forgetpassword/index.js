@@ -1,5 +1,13 @@
 import React, {useState, useContext} from 'react';
-import {View, Text, Image, TouchableOpacity, ScrollView} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
 import Logo from '../../../assets/images/logo.png';
 import styles from './style';
 import {TextInput} from 'react-native-gesture-handler';
@@ -16,12 +24,12 @@ import COLORS from '../../config/colors';
 const Forgot = () => {
   const {forgot, isLoading} = useContext(AuthContext);
   const navigation = useNavigation();
+  const [emailFocused, setEmailFocused] = useState(false);
   const [data, setData] = useState({
     email: '',
-    password: '',
     check_textInputChange: false,
-    secureTextEntry: true,
   });
+
   const textInputChange = val => {
     if (val.length != 0) {
       setData({
@@ -37,83 +45,128 @@ const Forgot = () => {
       });
     }
   };
+
   const handleClick = () => {
     if (data.email.length > 0) {
-      forgot(data);
+      forgot(data, navigation);
     } else {
-      alert('Please fill all the fields.');
+      alert('Please enter your email address.');
     }
   };
 
   return (
-    <View style={styles.container}>
+    <LinearGradient colors={['#2563eb', '#1d4ed8']} style={styles.container}>
       <Spinner visible={isLoading} />
-      <Animatable.View style={styles.header} animation="fadeInDownBig">
-        <Image source={Logo} style={styles.logo} />
-        <Text style={styles.text}>Forgot Password</Text>
-      </Animatable.View>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.keyboardView}>
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}>
+          {/* Logo Section */}
+          <Animatable.View
+            animation="fadeInDown"
+            duration={1000}
+            style={styles.logoContainer}>
+            <View style={styles.logoCircle}>
+              <Image source={Logo} style={styles.logo} />
+            </View>
+            <Text style={styles.welcomeTitle}>Forgot Password?</Text>
+            <Text style={styles.welcomeSubtitle}>
+              Don't worry! Enter your email and we'll send you a reset link
+            </Text>
+          </Animatable.View>
 
-      <Animatable.View style={styles.footer} animation="fadeInUpBig">
-        <ScrollView contentContainerStyle={{flexGrow: 1}}>
-          <Text style={styles.title}>Enter your registered email</Text>
-          <Text style={styles.text_footer}>Email</Text>
-          <View style={styles.action}>
-            <FontAwesome name="envelope-o" color="#05375a" size={20} />
-
-            <TextInput
-              placeholder="Your Email"
-              style={styles.textInput}
-              autoCapitalize="none"
-              onChangeText={val => textInputChange(val)}
-              placeholderTextColor="#000"
-            />
-            {data.check_textInputChange ? (
-              <Animatable.View animation="bounceIn">
-                <Feather name="check-circle" color="green" size={20} />
-              </Animatable.View>
-            ) : null}
-          </View>
-
-          <View style={{flex: 1}}></View>
-          <TouchableOpacity onPress={() => handleClick()}>
-            <LinearGradient
-              colors={COLORS.linearGradient}
-              style={styles.signIn}>
-              <Text style={styles.textSingIn}>Send Email</Text>
-              <MaterialIcons name="navigate-next" color="#fff" size={20} />
-            </LinearGradient>
-          </TouchableOpacity>
-
-          <View style={{flex: 1, flexDirection: 'row', marginTop: 20}}>
-            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-              <Text
+          {/* Reset Card */}
+          <Animatable.View
+            animation="fadeInUp"
+            duration={1000}
+            delay={200}
+            style={styles.resetCard}>
+            {/* Email Input */}
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>Email Address</Text>
+              <View
                 style={[
-                  styles.textSingIn,
-                  {
-                    color: COLORS.dark,
-                  },
+                  styles.inputWrapper,
+                  emailFocused && styles.inputWrapperFocused,
                 ]}>
-                Existing User ? Login
+                <FontAwesome
+                  name="envelope-o"
+                  size={18}
+                  color="#9ca3af"
+                  style={styles.inputIcon}
+                />
+                <TextInput
+                  placeholder="Enter your registered email"
+                  style={styles.textInput}
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  onChangeText={val => textInputChange(val)}
+                  onFocus={() => setEmailFocused(true)}
+                  onBlur={() => setEmailFocused(false)}
+                  placeholderTextColor="#9ca3af"
+                />
+                {data.check_textInputChange && (
+                  <Feather name="check-circle" color="#10b981" size={20} />
+                )}
+              </View>
+            </View>
+
+            {/* Info Box */}
+            <View style={styles.infoBox}>
+              <MaterialIcons name="info-outline" size={20} color="#2563eb" />
+              <Text style={styles.infoText}>
+                We'll send a password reset link to your registered email
+                address
               </Text>
+            </View>
+
+            {/* Send Button */}
+            <TouchableOpacity
+              onPress={() => handleClick()}
+              activeOpacity={0.8}
+              style={styles.sendButtonWrapper}>
+              <LinearGradient
+                colors={['#2563eb', '#1d4ed8']}
+                start={{x: 0, y: 0}}
+                end={{x: 1, y: 0}}
+                style={styles.sendButton}>
+                <Text style={styles.sendButtonText}>Send Reset Link</Text>
+                <MaterialIcons name="arrow-forward" color="#fff" size={24} />
+              </LinearGradient>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-              <Text
-                style={[
-                  styles.textSingIn,
-                  {
-                    color: COLORS.bgColor,
-                  },
-                ]}>
-                Register Now
-              </Text>
+            {/* Back to Login */}
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Login')}
+              style={styles.backButton}>
+              <MaterialIcons name="arrow-back" color="#6b7280" size={20} />
+              <Text style={styles.backText}>Back to Login</Text>
             </TouchableOpacity>
-          </View>
 
-          <View></View>
+            {/* Divider */}
+            <View style={styles.divider}>
+              <View style={styles.dividerLine} />
+              <Text style={styles.dividerText}>OR</Text>
+              <View style={styles.dividerLine} />
+            </View>
+
+            {/* Sign Up Link */}
+            <View style={styles.signupContainer}>
+              <Text style={styles.signupText}>Don't have an account? </Text>
+              <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+                <Text style={styles.signupLink}>Sign Up</Text>
+              </TouchableOpacity>
+            </View>
+          </Animatable.View>
+
+          {/* Bottom Spacing */}
+          <View style={styles.bottomSpacing} />
         </ScrollView>
-      </Animatable.View>
-    </View>
+      </KeyboardAvoidingView>
+    </LinearGradient>
   );
 };
 export default Forgot;

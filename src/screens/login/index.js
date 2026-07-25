@@ -1,6 +1,14 @@
 import React, {useState, useContext, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {View, Text, Image, TouchableOpacity, ScrollView} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
 import Logo from '../../../assets/images/logo.png';
 import styles from './style';
 import {TextInput} from 'react-native-gesture-handler';
@@ -19,10 +27,14 @@ const Login = () => {
   const navigation = useNavigation();
   const [deviceToken, setDeviceToken] = useState('');
   const [deviceId, setDeviceid] = useState('');
+  const [emailFocused, setEmailFocused] = useState(false);
+  const [passwordFocused, setPasswordFocused] = useState(false);
+
   const getDeviceId = async () => {
     setDeviceid(await AsyncStorage.getItem('deviceId'));
     setDeviceToken(await AsyncStorage.getItem('fcmToken'));
   };
+
   const [data, setData] = useState({
     deviceId: '',
     email: '',
@@ -30,6 +42,7 @@ const Login = () => {
     check_textInputChange: false,
     secureTextEntry: true,
   });
+
   const textInputChange = val => {
     if (val.length != 0) {
       setData({
@@ -47,25 +60,21 @@ const Login = () => {
       });
     }
   };
+
   const handlePassword = val => {
-    if (val.length != 0) {
-      setData({
-        ...data,
-        password: val,
-      });
-    } else {
-      setData({
-        ...data,
-        password: val,
-      });
-    }
+    setData({
+      ...data,
+      password: val,
+    });
   };
+
   const updateSecureText = () => {
     setData({
       ...data,
       secureTextEntry: !data.secureTextEntry,
     });
   };
+
   const handleLogin = () => {
     if (data.email.length > 0 && data.password.length > 0) {
       login(data);
@@ -73,110 +82,141 @@ const Login = () => {
       alert('Please fill all the fields.');
     }
   };
+
   useEffect(() => {
     getDeviceId();
   }, []);
+
   return (
-    <View style={styles.container}>
+    <LinearGradient colors={['#2563eb', '#1d4ed8']} style={styles.container}>
       <Loader status={isLoading} />
-      <Animatable.View style={styles.header} animation="fadeInDownBig">
-        <Image source={Logo} style={styles.logo} />
-        <Text style={styles.text}>Login Now</Text>
-      </Animatable.View>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.keyboardView}>
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}>
+          {/* Logo Section */}
+          <Animatable.View
+            animation="fadeInDown"
+            duration={1000}
+            style={styles.logoContainer}>
+            <View style={styles.logoCircle}>
+              <Image source={Logo} style={styles.logo} />
+            </View>
+            <Text style={styles.welcomeTitle}>Welcome Back!</Text>
+            <Text style={styles.welcomeSubtitle}>
+              Sign in to continue your learning journey
+            </Text>
+          </Animatable.View>
 
-      <Animatable.View style={styles.footer} animation="fadeInUpBig">
-        <ScrollView contentContainerStyle={{flexGrow: 1}}>
-          <Text style={styles.title}>Sign in with accounts</Text>
-          <Text style={styles.text_footer}>Email</Text>
-          <View style={styles.action}>
-            <FontAwesome name="envelope-o" color="#05375a" size={20} />
-
-            <TextInput
-              placeholder="Your Email"
-              style={styles.textInput}
-              autoCapitalize="none"
-              onChangeText={val => textInputChange(val)}
-              placeholderTextColor="#000"
-            />
-            {data.check_textInputChange ? (
-              <Animatable.View animation="bounceIn">
-                <Feather name="check-circle" color="green" size={20} />
-              </Animatable.View>
-            ) : null}
-          </View>
-
-          <Text style={[styles.text_footer]}>Password</Text>
-          <View style={styles.action}>
-            <FontAwesome name="lock" color="#05375a" size={20} />
-
-            <TextInput
-              placeholder="Your password"
-              style={styles.textInput}
-              autoCapitalize="none"
-              secureTextEntry={data.secureTextEntry ? true : false}
-              onChangeText={val => handlePassword(val)}
-              placeholderTextColor="#000"
-            />
-            <TouchableOpacity onPress={updateSecureText}>
-              {data.secureTextEntry ? (
-                <Feather name="eye-off" color="green" size={20} />
-              ) : (
-                <Feather name="eye" color="green" size={20} />
-              )}
-            </TouchableOpacity>
-          </View>
-
-          <TouchableOpacity onPress={() => handleLogin()}>
-            <LinearGradient
-              colors={COLORS.linearGradient}
-              style={styles.signIn}>
-              <Text style={styles.textSingIn}>Login</Text>
-              <MaterialIcons name="navigate-next" color="#fff" size={20} />
-            </LinearGradient>
-          </TouchableOpacity>
-          <View style={{flexDirection: 'row', marginTop: 5}}>
-            <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-              <Text
+          {/* Login Card */}
+          <Animatable.View
+            animation="fadeInUp"
+            duration={1000}
+            delay={200}
+            style={styles.loginCard}>
+            {/* Email Input */}
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>Email Address</Text>
+              <View
                 style={[
-                  styles.textSingIn,
-                  {
-                    color: COLORS.dark,
-                  },
+                  styles.inputWrapper,
+                  emailFocused && styles.inputWrapperFocused,
                 ]}>
-                New User ? Register
-              </Text>
+                <FontAwesome
+                  name="envelope-o"
+                  size={18}
+                  color="#9ca3af"
+                  style={styles.inputIcon}
+                />
+                <TextInput
+                  placeholder="Enter your email"
+                  style={styles.textInput}
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  onChangeText={val => textInputChange(val)}
+                  onFocus={() => setEmailFocused(true)}
+                  onBlur={() => setEmailFocused(false)}
+                  placeholderTextColor="#9ca3af"
+                />
+                {data.check_textInputChange && (
+                  <Feather name="check-circle" color="#10b981" size={20} />
+                )}
+              </View>
+            </View>
+
+            {/* Password Input */}
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>Password</Text>
+              <View
+                style={[
+                  styles.inputWrapper,
+                  passwordFocused && styles.inputWrapperFocused,
+                ]}>
+                <FontAwesome
+                  name="lock"
+                  size={18}
+                  color="#9ca3af"
+                  style={styles.inputIcon}
+                />
+                <TextInput
+                  placeholder="Enter your password"
+                  style={styles.textInput}
+                  autoCapitalize="none"
+                  secureTextEntry={data.secureTextEntry}
+                  onChangeText={val => handlePassword(val)}
+                  onFocus={() => setPasswordFocused(true)}
+                  onBlur={() => setPasswordFocused(false)}
+                  placeholderTextColor="#9ca3af"
+                />
+                <TouchableOpacity onPress={updateSecureText} activeOpacity={0.7}>
+                  <Feather
+                    name={data.secureTextEntry ? 'eye-off' : 'eye'}
+                    color="#9ca3af"
+                    size={20}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {/* Forgot Password Link */}
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Forgot')}
+              style={styles.forgotButton}>
+              <Text style={styles.forgotText}>Forgot Password?</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => navigation.navigate('Forgot')}>
-              <Text
-                style={[
-                  styles.textSingIn,
-                  {
-                    color: COLORS.bgColor,
-                  },
-                ]}>
-                Forgot Password
-              </Text>
+            {/* Login Button */}
+            <TouchableOpacity
+              onPress={() => handleLogin()}
+              activeOpacity={0.8}
+              style={styles.loginButtonWrapper}>
+              <LinearGradient
+                colors={['#2563eb', '#1d4ed8']}
+                start={{x: 0, y: 0}}
+                end={{x: 1, y: 0}}
+                style={styles.loginButton}>
+                <Text style={styles.loginButtonText}>Login</Text>
+                <MaterialIcons name="arrow-forward" color="#fff" size={24} />
+              </LinearGradient>
             </TouchableOpacity>
-          </View>
-          {/* <View style={{marginTop:6,flexDirection: 'row',alignContent:'center',justifyContent:'center'}}>
-            <TouchableOpacity onPress={() => navigation.navigate('AdminLogin')}>
-              <Text
-                style={[
-                  styles.textSingIn,
-                  {
-                    color: COLORS.bgColor,
-                    fontSize:20,
-                    fontStyle:'italic'
-                  },
-                ]}>
-                Admin Login
-              </Text>
-            </TouchableOpacity>
-          </View> */}
+
+            {/* Sign Up Link */}
+            <View style={styles.signupContainer}>
+              <Text style={styles.signupText}>Don't have an account? </Text>
+              <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+                <Text style={styles.signupLink}>Sign Up</Text>
+              </TouchableOpacity>
+            </View>
+          </Animatable.View>
+
+          {/* Bottom Spacing */}
+          <View style={styles.bottomSpacing} />
         </ScrollView>
-      </Animatable.View>
-    </View>
+      </KeyboardAvoidingView>
+    </LinearGradient>
   );
 };
 export default Login;

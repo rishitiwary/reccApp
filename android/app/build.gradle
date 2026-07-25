@@ -79,11 +79,11 @@ android {
 
     namespace "com.recc"
     defaultConfig {
-        applicationId "com.recc"
+        applicationId "com.brainershub.recc"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 50
-        versionName "1.67"
+        versionCode 1
+        versionName "1.0.0"
     }
     signingConfigs {
          release {

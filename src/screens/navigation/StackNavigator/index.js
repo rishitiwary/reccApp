@@ -7,6 +7,8 @@ import SplashScreen from '../../SplashScreen';
 import LoginScreen from '../../login';
 import SignupScreen from '../../register';
 import ForgetScreen from '../../forgetpassword';
+import VerifyOtpScreen from '../../verifyOtp';
+import ResetPasswordScreen from '../../resetPassword';
 import AdminLogin from '../../TestSeries/AdminLogin';
 import {AuthContext} from '../../../components/AuthContext';
 import COLORS from '../../../config/colors';
@@ -65,7 +67,17 @@ const StackNavigator = () => {
               component={ForgetScreen}
               options={{headerShown: false}}
             />
-               <Stack.Screen
+            <Stack.Screen
+              name="VerifyOtp"
+              component={VerifyOtpScreen}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="ResetPassword"
+              component={ResetPasswordScreen}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
               name="AdminLogin"
               component={AdminLogin}
               options={{headerShown: false}}

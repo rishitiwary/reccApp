@@ -95,7 +95,7 @@ export const AuthProvider = ({children}) => {
   };
   //forgot password
 
-  const forgot = async data => {
+  const forgot = async (data, navigation) => {
     setMessage(null);
     setIsLoading(true);
     let formData = {
@@ -108,13 +108,30 @@ export const AuthProvider = ({children}) => {
       },
     })
       .then(function (response) {
-        let result = JSON.stringify(response.data);
+        let result = JSON.parse(JSON.stringify(response.data));
         setIsLoading(false);
-        setMessage(JSON.parse(result).message);
-        setMessage(null);
+        
+        if (result.success) {
+          setMessage(result.message || 'A 4-digit PIN has been sent to your email address.');
+          if (navigation) {
+            navigation.navigate('ResetPassword', {email: data.email});
+          }
+        } else {
+          Alert.alert(
+            'Error',
+            result.message || 'Failed to send PIN. Please try again.',
+            [{text: 'OK'}]
+          );
+        }
       })
       .catch(function (error) {
         setIsLoading(false);
+        console.log('Forgot password error:', error);
+        Alert.alert(
+          'Error',
+          error.response?.data?.message || 'Something went wrong. Please check your email and try again.',
+          [{text: 'OK'}]
+        );
       });
   };
   //update profile

@@ -9,7 +9,7 @@ import { BottomNavigation } from '../../components/BottomNavigation';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Loader } from '../../components/Loader';
 import FontAwesome from '@react-native-vector-icons/fontawesome';
-import { LinearGradient } from 'react-native-linear-gradient';
+import LinearGradient from 'react-native-linear-gradient';
 
 const MyPurchase = () => {
   const insets = useSafeAreaInsets();

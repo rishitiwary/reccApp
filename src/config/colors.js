@@ -41,6 +41,9 @@ export const COLORS = {
   
   // Additional
   white: '#FFFFFF',
+  
+  // Linear Gradient
+  linearGradient: ['#2563eb', '#1d4ed8'], // Blue gradient for buttons
 };
 
 export default COLORS;

@@ -3,7 +3,7 @@ import api from '../services/api';
 import {BASE_URL} from '../config/config';
 import {FlatList, View, Text, TouchableOpacity} from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {LinearGradient} from 'react-native-linear-gradient';
+import LinearGradient from 'react-native-linear-gradient';
 import LoginCheck from './LoginCheck';
 
 export const Topmenu = () => {

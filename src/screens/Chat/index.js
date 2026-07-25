@@ -7,7 +7,7 @@ import {AuthContext} from '../../components/AuthContext';
 import {BASE_URL, CHAT_URL, IMG_URL} from '../../config/config';
 import api from '../../services/api';
 import COLORS from '../../config/colors';
-import {LinearGradient} from 'react-native-linear-gradient';
+import LinearGradient from 'react-native-linear-gradient';
 
 const Chat = ({route}) => {
   const connectionId = route.params.connectionId;

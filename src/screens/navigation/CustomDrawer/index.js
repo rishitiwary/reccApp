@@ -11,7 +11,7 @@ import Ionicons from '@react-native-vector-icons/ionicons';
 import FontAwesome5 from '@react-native-vector-icons/fontawesome5';
 import FontAwesome from '@react-native-vector-icons/fontawesome';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { LinearGradient } from 'react-native-linear-gradient';
+import LinearGradient from 'react-native-linear-gradient';
 
 const { width } = Dimensions.get('window');
 

@@ -17,7 +17,7 @@ import { AuthContext } from '../../components/AuthContext';
 import Ionicons from '@react-native-vector-icons/ionicons';
 import FontAwesome5 from '@react-native-vector-icons/fontawesome5';
 import FontAwesome from '@react-native-vector-icons/fontawesome';
-import { LinearGradient } from 'react-native-linear-gradient';
+import LinearGradient from 'react-native-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const AIAssistant = () => {

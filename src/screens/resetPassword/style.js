@@ -1,7 +1,4 @@
-import COLORS from '../../config/colors';
-import {Dimensions, StyleSheet, Platform} from 'react-native';
-
-const {height, width} = Dimensions.get('screen');
+import {StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
@@ -13,12 +10,12 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     paddingHorizontal: 24,
-    paddingTop: Platform.OS === 'ios' ? 60 : 40,
   },
 
   // Logo Section
   logoContainer: {
     alignItems: 'center',
+    marginTop: 60,
     marginBottom: 40,
   },
   logoCircle: {
@@ -28,21 +25,21 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 24,
     borderWidth: 3,
     borderColor: 'rgba(255, 255, 255, 0.3)',
   },
   logo: {
-    width: 70,
-    height: 70,
+    width: 60,
+    height: 60,
     resizeMode: 'contain',
   },
   welcomeTitle: {
     fontSize: 32,
-    fontWeight: '800',
+    fontWeight: 'bold',
     color: '#ffffff',
     marginBottom: 8,
-    letterSpacing: 0.5,
+    textAlign: 'center',
   },
   welcomeSubtitle: {
     fontSize: 16,
@@ -106,96 +103,75 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#eff6ff',
     borderRadius: 12,
-    padding: 16,
-    marginBottom: 24,
-    borderWidth: 1,
-    borderColor: '#bfdbfe',
+    padding: 14,
+    marginBottom: 20,
+    alignItems: 'center',
   },
   infoText: {
     flex: 1,
-    fontSize: 14,
+    fontSize: 13,
     color: '#1e40af',
-    marginLeft: 12,
-    lineHeight: 20,
+    marginLeft: 10,
+    lineHeight: 18,
+  },
+  
+  // Password Info Box
+  passwordInfoBox: {
+    flexDirection: 'row',
+    backgroundColor: '#f9fafb',
+    borderRadius: 8,
+    padding: 10,
+    marginBottom: 24,
+    alignItems: 'center',
+  },
+  passwordInfoText: {
+    flex: 1,
+    fontSize: 12,
+    color: '#6b7280',
+    marginLeft: 8,
+    lineHeight: 16,
   },
 
-  // Send Button
-  sendButtonWrapper: {
+  // Reset Button
+  resetButton: {
     marginBottom: 20,
-  },
-  sendButton: {
-    flexDirection: 'row',
-    height: 56,
     borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#2563eb',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 6,
+    overflow: 'hidden',
   },
-  sendButtonText: {
-    fontSize: 18,
-    fontWeight: '700',
+  resetButtonGradient: {
+    paddingVertical: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  resetButtonText: {
     color: '#ffffff',
-    marginRight: 8,
-    letterSpacing: 0.5,
+    fontSize: 16,
+    fontWeight: '600',
+  },
+
+  // Divider
+  divider: {
+    height: 1,
+    backgroundColor: '#e5e7eb',
+    marginVertical: 20,
   },
 
   // Back Button
   backButton: {
     flexDirection: 'row',
-    justifyContent: 'center',
     alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(37, 99, 235, 0.1)',
     paddingVertical: 12,
-    marginBottom: 20,
+    borderRadius: 12,
   },
-  backText: {
-    fontSize: 15,
+  backButtonText: {
+    fontSize: 14,
+    color: '#2563eb',
     fontWeight: '600',
-    color: '#6b7280',
     marginLeft: 8,
   },
 
-  // Divider
-  divider: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 20,
-  },
-  dividerLine: {
-    flex: 1,
-    height: 1,
-    backgroundColor: '#e5e7eb',
-  },
-  dividerText: {
-    fontSize: 14,
-    color: '#9ca3af',
-    marginHorizontal: 16,
-    fontWeight: '500',
-  },
-
-  // Sign Up Link
-  signupContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  signupText: {
-    fontSize: 15,
-    color: '#6b7280',
-  },
-  signupLink: {
-    fontSize: 15,
-    fontWeight: '700',
-    color: '#2563eb',
-  },
-
-  // Bottom Spacing
   bottomSpacing: {
     height: 40,
   },

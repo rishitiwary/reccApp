@@ -7,7 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import FontAwesome from '@react-native-vector-icons/fontawesome';
 import { DownloadFiles } from '../../components/DownloadFiles';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { LinearGradient } from 'react-native-linear-gradient';
+import LinearGradient from 'react-native-linear-gradient';
 
 const Contents = ({ route }) => {
   const courseId = route.params.courseId;

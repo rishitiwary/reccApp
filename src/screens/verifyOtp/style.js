@@ -1,7 +1,6 @@
-import COLORS from '../../config/colors';
-import {Dimensions, StyleSheet, Platform} from 'react-native';
+import {StyleSheet, Dimensions} from 'react-native';
 
-const {height, width} = Dimensions.get('screen');
+const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -13,12 +12,12 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     paddingHorizontal: 24,
-    paddingTop: Platform.OS === 'ios' ? 60 : 40,
   },
 
   // Logo Section
   logoContainer: {
     alignItems: 'center',
+    marginTop: 60,
     marginBottom: 40,
   },
   logoCircle: {
@@ -28,21 +27,21 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 24,
     borderWidth: 3,
     borderColor: 'rgba(255, 255, 255, 0.3)',
   },
   logo: {
-    width: 70,
-    height: 70,
+    width: 60,
+    height: 60,
     resizeMode: 'contain',
   },
   welcomeTitle: {
     fontSize: 32,
-    fontWeight: '800',
+    fontWeight: 'bold',
     color: '#ffffff',
     marginBottom: 8,
-    letterSpacing: 0.5,
+    textAlign: 'center',
   },
   welcomeSubtitle: {
     fontSize: 16,
@@ -52,8 +51,8 @@ const styles = StyleSheet.create({
     lineHeight: 24,
   },
 
-  // Reset Card
-  resetCard: {
+  // OTP Card
+  otpCard: {
     backgroundColor: '#ffffff',
     borderRadius: 24,
     padding: 28,
@@ -67,38 +66,27 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
 
-  // Input Styles
-  inputContainer: {
-    marginBottom: 20,
-  },
-  inputLabel: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#374151',
-    marginBottom: 8,
-    marginLeft: 4,
-  },
-  inputWrapper: {
+  // OTP Input
+  otpContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#ffffff',
+    justifyContent: 'space-between',
+    marginBottom: 24,
+  },
+  otpInput: {
+    width: (width - 120) / 4,
+    height: 60,
     borderRadius: 12,
     borderWidth: 2,
     borderColor: '#e5e7eb',
-    paddingHorizontal: 16,
-    height: 56,
-  },
-  inputWrapperFocused: {
-    borderColor: '#2563eb',
-  },
-  inputIcon: {
-    marginRight: 12,
-  },
-  textInput: {
-    flex: 1,
-    fontSize: 16,
+    backgroundColor: '#ffffff',
+    textAlign: 'center',
+    fontSize: 24,
+    fontWeight: 'bold',
     color: '#1f2937',
-    paddingVertical: 0,
+  },
+  otpInputFilled: {
+    borderColor: '#2563eb',
+    backgroundColor: '#eff6ff',
   },
 
   // Info Box
@@ -108,8 +96,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 16,
     marginBottom: 24,
-    borderWidth: 1,
-    borderColor: '#bfdbfe',
+    alignItems: 'center',
   },
   infoText: {
     flex: 1,
@@ -119,83 +106,63 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
 
-  // Send Button
-  sendButtonWrapper: {
+  // Verify Button
+  verifyButton: {
     marginBottom: 20,
-  },
-  sendButton: {
-    flexDirection: 'row',
-    height: 56,
     borderRadius: 12,
+    overflow: 'hidden',
+  },
+  verifyButtonGradient: {
+    paddingVertical: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  verifyButtonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+
+  // Resend
+  resendContainer: {
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#2563eb',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 6,
+    marginBottom: 20,
   },
-  sendButtonText: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#ffffff',
-    marginRight: 8,
-    letterSpacing: 0.5,
+  resendText: {
+    fontSize: 14,
+    color: '#6b7280',
+  },
+  resendLink: {
+    fontSize: 14,
+    color: '#2563eb',
+    fontWeight: '600',
+  },
+
+  // Divider
+  divider: {
+    height: 1,
+    backgroundColor: '#e5e7eb',
+    marginVertical: 20,
   },
 
   // Back Button
   backButton: {
     flexDirection: 'row',
-    justifyContent: 'center',
     alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(37, 99, 235, 0.1)',
     paddingVertical: 12,
-    marginBottom: 20,
+    borderRadius: 12,
   },
-  backText: {
-    fontSize: 15,
+  backButtonText: {
+    fontSize: 14,
+    color: '#2563eb',
     fontWeight: '600',
-    color: '#6b7280',
     marginLeft: 8,
   },
 
-  // Divider
-  divider: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 20,
-  },
-  dividerLine: {
-    flex: 1,
-    height: 1,
-    backgroundColor: '#e5e7eb',
-  },
-  dividerText: {
-    fontSize: 14,
-    color: '#9ca3af',
-    marginHorizontal: 16,
-    fontWeight: '500',
-  },
-
-  // Sign Up Link
-  signupContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  signupText: {
-    fontSize: 15,
-    color: '#6b7280',
-  },
-  signupLink: {
-    fontSize: 15,
-    fontWeight: '700',
-    color: '#2563eb',
-  },
-
-  // Bottom Spacing
   bottomSpacing: {
     height: 40,
   },

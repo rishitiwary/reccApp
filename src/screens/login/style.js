@@ -1,120 +1,164 @@
 import COLORS from '../../config/colors';
 import {Dimensions, StyleSheet, Platform} from 'react-native';
+
 const {height, width} = Dimensions.get('screen');
-const height_logo = height * 0.1;
-const width_logo = width * 0.3;
+
 const styles = StyleSheet.create({
-  inputIOS: {
-    fontSize: 16,
-    paddingLeft: 0,
-    color: 'black',
-  },
-  inputAndroid: {
-    fontSize: 16,
-    paddingLeft: 0,
-    color: 'black',
-  },
   container: {
     flex: 1,
-    backgroundColor: COLORS.bgColor,
   },
-  logo: {
-    height: height_logo,
-    width: width_logo,
-    resizeMode: 'stretch',
-  },
-
-  text: {
-    paddingTop: 20,
-    color: '#fff',
-    fontSize: 25,
-  },
-
-  header: {
+  keyboardView: {
     flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    paddingHorizontal: 24,
+    paddingTop: Platform.OS === 'ios' ? 60 : 40,
+  },
+  
+  // Logo Section
+  logoContainer: {
+    alignItems: 'center',
+    marginBottom: 40,
+  },
+  logoCircle: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 20,
-    marginTop: 20,
+    borderWidth: 3,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
   },
-  footer: {
-    flex: 3,
-    backgroundColor: COLORS.white,
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    paddingVertical: 50,
-    paddingHorizontal: 30,
+  logo: {
+    width: 70,
+    height: 70,
+    resizeMode: 'contain',
   },
-  input: {
-    borderColor: COLORS.primary,
-    borderRadius: 2,
+  welcomeTitle: {
+    fontSize: 32,
+    fontWeight: '800',
+    color: '#ffffff',
+    marginBottom: 8,
+    letterSpacing: 0.5,
   },
-  title: {
-    color: '#05375a',
-    fontSize: 24,
-    fontWeight: 'bolder',
-    marginTop: -8,
+  welcomeSubtitle: {
+    fontSize: 16,
+    color: 'rgba(255, 255, 255, 0.9)',
+    textAlign: 'center',
+    paddingHorizontal: 20,
   },
 
-  button: {
-    alignItems: 'flex-end',
-    marginTop: 30,
+  // Login Card
+  loginCard: {
+    backgroundColor: '#ffffff',
+    borderRadius: 24,
+    padding: 28,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 10,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 20,
+    elevation: 10,
   },
-  signIn: {
-    marginTop: 15,
-    width: '100%',
-    height: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 30,
+
+  // Input Styles
+  inputContainer: {
+    marginBottom: 20,
+  },
+  inputLabel: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#374151',
+    marginBottom: 8,
+    marginLeft: 4,
+  },
+  inputWrapper: {
     flexDirection: 'row',
-  },
-  textSingIn: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: COLORS.light,
-    paddingLeft: 15,
-  },
-  button: {
     alignItems: 'center',
-    marginTop: 50,
+    backgroundColor: '#ffffff',
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: '#e5e7eb',
+    paddingHorizontal: 16,
+    height: 56,
+  },
+  inputWrapperFocused: {
+    borderColor: '#2563eb',
+  },
+  inputIcon: {
+    marginRight: 12,
   },
   textInput: {
     flex: 1,
-    marginTop: Platform.OS === 'ios' ? 0 : -12,
-    paddingLeft: 10,
-    color: '#05375a',
+    fontSize: 16,
+    color: '#1f2937',
+    paddingVertical: 0,
   },
-  errorMsg: {
-    color: '#FF0000',
+
+  // Forgot Password
+  forgotButton: {
+    alignSelf: 'flex-end',
+    marginTop: -8,
+    marginBottom: 24,
+  },
+  forgotText: {
     fontSize: 14,
+    fontWeight: '600',
+    color: '#2563eb',
   },
-  text_header: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 30,
+
+  // Login Button
+  loginButtonWrapper: {
+    marginBottom: 24,
   },
-  text_footer: {
-    color: '#05375a',
+  loginButton: {
+    flexDirection: 'row',
+    height: 56,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#2563eb',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
+  },
+  loginButtonText: {
     fontSize: 18,
-    paddingTop: 30,
+    fontWeight: '700',
+    color: '#ffffff',
+    marginRight: 8,
+    letterSpacing: 0.5,
   },
-  action: {
+
+  // Sign Up Link
+  signupContainer: {
     flexDirection: 'row',
-    marginTop: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f2f2f2',
-    paddingBottom: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  actionError: {
-    flexDirection: 'row',
-    marginTop: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#FF0000',
-    paddingBottom: 5,
+  signupText: {
+    fontSize: 15,
+    color: '#6b7280',
   },
-  spinnerTextStyle: {
-    color: '#FFF',
+  signupLink: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: '#2563eb',
+  },
+
+  // Bottom Spacing
+  bottomSpacing: {
+    height: 40,
   },
 });
+
 export default styles;
