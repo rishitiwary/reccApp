@@ -3,6 +3,7 @@ import {BASE_URL, institute_id} from '../config/config';
 import api from '../services/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {AppState, Alert} from 'react-native';
+import Toast from 'react-native-toast-message';
 export const AuthContext = createContext();
 export const AuthProvider = ({children}) => {
   const [userInfo, setUserInfo] = useState([]);
@@ -82,15 +83,41 @@ export const AuthProvider = ({children}) => {
           let results = JSON.stringify(response.data);
           setUserInfo(results);
           AsyncStorage.setItem('userInfo', results);
+          
+          // Show success toast
+          Toast.show({
+            type: 'success',
+            text1: 'Login Successful',
+            text2: response.data.message || 'Welcome back!',
+            position: 'top',
+            visibilityTime: 3000,
+          });
+        } else {
+          // Show error toast for failed login
+          Toast.show({
+            type: 'error',
+            text1: 'Login Failed',
+            text2: response.data.message || 'Invalid credentials',
+            position: 'top',
+            visibilityTime: 4000,
+          });
         }
         let result = JSON.stringify(response.data.message);
         setMessage(JSON.parse(result));
-        setMessage(null);
         setIsLoading(false);
       })
       .catch(function (error) {
         console.log('error', error);
         setIsLoading(false);
+        
+        // Show error toast for network/server errors
+        Toast.show({
+          type: 'error',
+          text1: 'Login Error',
+          text2: error.response?.data?.message || 'Network error. Please check your connection and try again.',
+          position: 'top',
+          visibilityTime: 4000,
+        });
       });
   };
   //forgot password

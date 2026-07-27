@@ -8,6 +8,7 @@ import DeviceInfo from 'react-native-device-info';
 import NetInfo from '@react-native-community/netinfo';
 import api from './src/services/api';
 import {institute_id} from './src/config/config';
+import Toast from 'react-native-toast-message';
 
 const App = () => {
   const [netInfo, setNetInfo] = useState('');
@@ -55,6 +56,7 @@ const App = () => {
           <StackNavigator />
         </AuthProvider>
       </SafeAreaProvider>
+      <Toast />
     </GestureHandlerRootView>
   );
 };
