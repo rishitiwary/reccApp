@@ -159,10 +159,10 @@ const CourseDetails = ({route}) => {
         </View>
         <View style={styles.videoInfo}>
           <Text numberOfLines={2} style={styles.videoTitle}>
-            {item.title}
+            {item?.title}
           </Text>
           <Text numberOfLines={2} style={styles.videoDescription}>
-            {item.description.replace(regex, '')}
+            {item?.description?.replace(regex, '')}
           </Text>
         </View>
       </View>
@@ -212,7 +212,7 @@ const CourseDetails = ({route}) => {
             ]}>
             <Image
               key={course.id}
-              source={{uri: `${IMG_URL + course.course_thumbnail}`}}
+              source={{uri: `${course.course_thumbnail}`}}
               style={styles.heroImage}
               resizeMode="cover"
             />
@@ -220,6 +220,7 @@ const CourseDetails = ({route}) => {
           </Animated.View>
 
           {/* About Section with Card Design */}
+          {course?.description && (
           <View style={styles.sectionCard}>
             <View style={styles.sectionHeader}>
               <View style={styles.sectionIconContainer}>
@@ -228,11 +229,13 @@ const CourseDetails = ({route}) => {
               <Text style={styles.sectionTitle}>About This Course</Text>
             </View>
             <Text style={styles.descriptionText}>
-              {course.description.replace(regex, '')}
+
+              {course?.description?.replace(regex, '')}
             </Text>
           </View>
-
+          )}
           {/* Course Preview Video */}
+          {course?.course_url && (
           <View style={styles.sectionCard}>
             <View style={styles.sectionHeader}>
               <View style={styles.sectionIconContainer}>
@@ -260,9 +263,10 @@ const CourseDetails = ({route}) => {
               </View>
             </TouchableOpacity>
           </View>
-
+          )}  
+          
           {/* Related Videos Section */}
-          {getData.data && getData.data.length > 0 && (
+          {getData?.data && getData?.data?.length > 0 && (
             <View style={styles.relatedSection}>
               <View style={styles.sectionHeader}>
                 <View style={styles.sectionIconContainer}>

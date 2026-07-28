@@ -1,20 +1,47 @@
-import React, {useState, useEffect} from 'react';
-import {View, Text, TouchableOpacity, Image, StyleSheet, StatusBar} from 'react-native';
+import React, {useState, useEffect, useContext} from 'react';
+import {View, Text, TouchableOpacity, Image, StyleSheet, StatusBar, AppState} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import FontAwesome from '@react-native-vector-icons/fontawesome';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {AuthContext} from '../AuthContext';
+import api from '../../services/api';
+import {institute_id} from '../../config/config';
 import COLORS from '../../config/colors';
 
 const AppHeader = () => {
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
+  const {userInfo} = useContext(AuthContext);
   const [settings, setSettings] = useState(null);
-  const [notificationCount, setNotificationCount] = useState(3);
+  const [notificationCount, setNotificationCount] = useState(0);
 
   useEffect(() => {
     loadSettings();
+    fetchNotificationCount();
+    
+    // Set up periodic refresh every 30 seconds
+    const interval = setInterval(fetchNotificationCount, 30000);
+    
+    // Listen for app state changes to refresh when app comes to foreground
+    const subscription = AppState.addEventListener('change', (nextAppState) => {
+      if (nextAppState === 'active') {
+        fetchNotificationCount();
+      }
+    });
+
+    return () => {
+      clearInterval(interval);
+      subscription?.remove();
+    };
   }, []);
+
+  // Refresh notification count when screen is focused
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchNotificationCount();
+    }, [])
+  );
 
   const loadSettings = async () => {
     try {
@@ -24,6 +51,30 @@ const AppHeader = () => {
       }
     } catch (error) {
       console.log('Error loading settings:', error);
+    }
+  };
+
+  const fetchNotificationCount = async () => {
+    try {
+      if (!userInfo) return;
+      
+      const user = JSON.parse(userInfo);
+      const email = user.data?.email;
+      
+      if (!email) return;
+
+      const response = await api.get('/content-notifications/unread-count', {
+        params: {
+          email: email,
+          institute_id: institute_id
+        }
+      });
+
+      if (response.data.success) {
+        setNotificationCount(response.data.count || 0);
+      }
+    } catch (error) {
+      console.log('Error fetching notification count:', error);
     }
   };
 
@@ -37,8 +88,7 @@ const AppHeader = () => {
   };
 
   const openNotifications = () => {
-    // Implement notifications
-    console.log('Open notifications');
+    navigation.navigate('Notifications');
   };
 
   return (

@@ -29,6 +29,7 @@ import Downloads from '../../Description/Downloads';
 import VideoPlayer from '../../../components/VideoPlayer';
 import LiveVideoList from '../../Description/LiveVideoList';
 import DiscussionGroup from '../../Description/DiscussionGroup';
+import Notifications from '../../Notifications';
 const Stack = createNativeStackNavigator();
 const NavigationScreens = () => {
   const { userInfo } = React.useContext(AuthContext);
@@ -105,6 +106,11 @@ const NavigationScreens = () => {
         <Stack.Screen name="DetailsRelated" component={DetailsRelated} />
         <Stack.Screen name="Downloads" component={Downloads} />
         <Stack.Screen name='Discussion Group' component={DiscussionGroup} />
+        <Stack.Screen 
+          name="Notifications" 
+          component={Notifications}
+          options={{ headerShown: false }}
+        />
 
         <Stack.Screen
           name="VideoPlayer"
