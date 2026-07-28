@@ -82,8 +82,8 @@ android {
         applicationId "com.recc"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 47
-        versionName "1.64"
+        versionCode 50
+        versionName "1.67"
     }
     signingConfigs {
          release {
