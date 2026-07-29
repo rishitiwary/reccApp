@@ -14,7 +14,7 @@ const QuickActions = () => {
       icon: 'book',
       color: '#2563eb',
       bgColor: '#dbeafe',
-      onPress: () => navigation.navigate('Course', {type: 'all', name: 'All Courses'}),
+      onPress: () => navigation.navigate('Course', {type: 'allCourses', name: 'All Courses'}),
     },
     {
       id: 2,

@@ -19,23 +19,25 @@ export default function MyDrawer() {
       drawerContent={props => <CustomDrawer {...props} />}
       initialRouteName="HomeScreen"
       screenOptions={{
-        drawerActiveBackgroundColor: '#dbeafe',
-        drawerActiveTintColor: '#2563eb',
+        drawerActiveBackgroundColor: '#e3f2fd',
+        drawerActiveTintColor: '#1d6bde',
         drawerInactiveTintColor: '#6b7280',
         drawerLabelStyle: {
           marginLeft: -20,
           fontSize: 15,
           fontWeight: '600',
+          letterSpacing: 0.3,
         },
         drawerItemStyle: {
-          borderRadius: 10,
-          marginHorizontal: 8,
-          marginVertical: 2,
-          paddingLeft: 8,
+          borderRadius: 12,
+          marginHorizontal: 12,
+          marginVertical: 3,
+          paddingLeft: 12,
+          paddingVertical: 4,
         },
         drawerStyle: {
           backgroundColor: '#fff',
-          width: 280,
+          width: 290,
         },
         headerStyle: {
           backgroundColor: '#2563eb',

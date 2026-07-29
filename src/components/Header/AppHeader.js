@@ -82,9 +82,11 @@ const AppHeader = () => {
     navigation.toggleDrawer();
   };
 
-  const openSearch = () => {
+  const openSearch = async () => {
     // Implement search functionality
-    console.log('Open search');
+    await navigation.navigate('Course', {
+      type: 'allCourses', name: 'All Courses'
+    });
   };
 
   const openNotifications = () => {
